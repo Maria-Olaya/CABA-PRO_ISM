@@ -1,0 +1,154 @@
+/* ============================
+   📂 static/css/globals.css
+   Estilos base y variables
+   ============================ */
+:root{
+  --verde-logo: #127321;    
+  --naranja-logo: #F2811D;  
+  --rojo-logo: #c0392b;
+  --gris-claro: #f7f7f7;
+  --gris-texto: #263238;
+  --gris-borde: #e0e0e0;
+  --blanco: #ffffff;
+  --card-shadow: 0 8px 30px rgba(16,24,40,0.06);
+  --radius-card: 0.5rem;
+  --transition-speed: 0.2s;
+}
+
+/* ============================
+   Reset y body
+============================ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: var(--gris-claro);
+  color: var(--gris-texto);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a { text-decoration: none; color: inherit; }
+ul, ol { list-style: none; }
+img { max-width: 100%; display: block; }
+
+/* ============================
+   🎨 Botones base
+============================ */
+.btn-cta {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--radius-card);
+  cursor: pointer;
+  transition: all var(--transition-speed) ease-in-out;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+}
+.btn-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* ============================
+   🎨 Botones colores
+============================ */
+/* Verde sólido */
+.btn-caba-verde { 
+  background-color: var(--verde-logo); 
+  color: var(--blanco); 
+  border: 1px solid var(--verde-logo); 
+}
+.btn-caba-verde:hover { background-color: #0f5d1c; }
+
+/* Verde outline */
+.btn-caba-verde-outline { 
+  background: transparent; 
+  color: var(--verde-logo); 
+  border: 1px solid var(--verde-logo);
+}
+.btn-caba-verde-outline:hover { 
+  background: var(--verde-logo); 
+  color: var(--blanco); 
+}
+
+/* Naranja sólido */
+.btn-caba-naranja { 
+  background-color: var(--naranja-logo); 
+  color: var(--blanco); 
+  border: 1px solid var(--naranja-logo); 
+}
+.btn-caba-naranja:hover { background-color: #e07a1b; }
+
+/* Naranja outline */
+.btn-caba-naranja-outline { 
+  background: transparent; 
+  color: var(--naranja-logo); 
+  border: 1px solid var(--naranja-logo);
+}
+.btn-caba-naranja-outline:hover { 
+  background: var(--naranja-logo); 
+  color: var(--blanco); 
+}
+
+/* Rojo sólido */
+.btn-caba-peligro { 
+  background-color: var(--rojo-logo); 
+  color: var(--blanco); 
+  border: 1px solid var(--rojo-logo); 
+}
+.btn-caba-peligro:hover { background-color: #a8322a; }
+
+/* Rojo outline */
+.btn-caba-peligro-outline { 
+  background: transparent; 
+  color: var(--rojo-logo); 
+  border: 1px solid var(--rojo-logo);
+}
+.btn-caba-peligro-outline:hover { 
+  background: var(--rojo-logo); 
+  color: var(--blanco); 
+}
+
+/* ============================
+   🎨 Tamaños
+============================ */
+.btn-sm { padding: 0.3rem 0.6rem; font-size: 0.875rem; }
+.btn-md { padding: 0.6rem 1.2rem; font-size: 1rem; }
+.btn-lg { padding: 0.9rem 1.8rem; font-size: 1.125rem; }
+
+/* ============================
+   🎯 Estados de asignación
+============================ */
+.estado { font-weight: 600; }
+.PENDIENTE { color: #b07a00; }
+.ACEPTADA { color: #1b7f3f; }
+.RECHAZADA { color: #b00020; }
+.FINALIZADA { color: #676767; }
+.asignada { color: var(--rojo-logo); font-weight: bold; margin-left: 0.5rem; }
+.EN_CURSO { color: var(--verde-logo); font-weight: bold; }
+.FINALIZADO { color: #676767; font-weight: bold; }
+.PROGRAMADO { color: #b07a00; font-weight: bold; }
+
+/* ============================
+   🎨 Cards y contenedores
+============================ */
+.card {
+  background-color: var(--blanco);
+  border-radius: var(--radius-card);
+  box-shadow: var(--card-shadow);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+.card h2, .card h3, .card h4 {
+  margin-bottom: 0.5rem;
+  color: var(--gris-texto);
+}
+
+.asignacion-item {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: var(--radius-card);
+  box-shadow: var(--card-shadow);
+  background-color: var(--blanco);
+}

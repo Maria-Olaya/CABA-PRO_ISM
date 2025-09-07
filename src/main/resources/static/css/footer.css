@@ -1,0 +1,7 @@
+/* ============================
+   📂 static/css/footer.css
+   Estilos del footer
+   ============================ */
+footer{ margin-top:40px; background:#0e1620; color:#dbe6f0; padding:40px 20px; }
+footer a{ color:#ffd0a8; text-decoration:none; }
+footer a:hover{ color: var(--verde-logo); }

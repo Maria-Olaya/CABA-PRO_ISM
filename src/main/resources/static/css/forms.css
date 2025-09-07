@@ -1,0 +1,59 @@
+/* ============================
+   📂 static/css/forms.css
+   Estilos específicos de formularios
+   ============================ */
+
+/* Inputs, selects, textareas */
+form input,
+form select,
+form textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+  border-color: #127321; /* verde logo */
+  box-shadow: 0 0 0 3px rgba(18, 115, 33, 0.15);
+  outline: none;
+}
+
+/* Labels */
+form label {
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+/* Mensajes de error */
+form .text-danger {
+  font-size: 0.85rem;
+  margin-top: -0.5rem;
+  display: block;
+}
+
+/* Textarea adicional si quieres altura definida */
+form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+
+/* Forzar checkbox + fecha en la misma línea */
+.fila-fecha {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: nowrap; /* evita que la fecha se vaya a otra línea */
+}
+
+.fila-fecha span {
+  white-space: nowrap; /* fuerza que la fecha no se rompa */
+}

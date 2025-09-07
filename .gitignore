@@ -2,7 +2,7 @@
 
 
 /src/main/resources/application.properties
-/src/main/resources/application-example.properties
+/src/main/resources/application-dev.properties
 /src/main/resources/application-staging.properties
 
 HELP.md

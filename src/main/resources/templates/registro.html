@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registro</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Tipografía y colores globales -->
+  <link rel="stylesheet" href="/css/globals.css">
+  <link rel="stylesheet" href="/css/forms.css">
+  <link rel="stylesheet" href="/css/home.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+</head>
+<body>
+  <!-- HEADER -->
+  <div th:replace="fragments/header :: header"></div>
+
+  <!-- FORMULARIO DE REGISTRO -->
+  <!-- FORMULARIO DE REGISTRO -->
+  <main class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-4">
+        <div class="card p-4 shadow-sm rounded-3">
+          <h2 class="mb-4 text-center">Registro</h2>
+
+          <form method="post" th:action="@{/registro}" th:object="${registerForm}" class="needs-validation">
+
+
+            <!-- Nombre -->
+            <div class="mb-3">
+              <label class="form-label">Nombre</label>
+              <input type="text" th:field="*{nombre}" placeholder="Nombre" class="form-control" required/>
+              <div class="text-danger small" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
+            </div>
+
+            <!-- Apellido -->
+            <div class="mb-3">
+              <label class="form-label">Apellido</label>
+              <input type="text" th:field="*{apellido}" placeholder="Apellido" class="form-control" required/>
+              <div class="text-danger small" th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></div>
+            </div>
+
+            <!-- Correo -->
+            <div class="mb-3">
+              <label class="form-label">Correo</label>
+              <input type="email" th:field="*{correo}" placeholder="Correo" class="form-control" required/>
+              <div class="text-danger small" th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"></div>
+            </div>
+
+            <!-- Contraseña -->
+            <div class="mb-3">
+              <label class="form-label">Contraseña</label>
+              <input type="password" th:field="*{contrasena}" placeholder="Contraseña" class="form-control" required/>
+              <div class="text-danger small" th:if="${#fields.hasErrors('contrasena')}" th:errors="*{contrasena}"></div>
+            </div>
+
+
+
+            <!-- Botón registrarse -->
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-cta btn-caba-verde btn-lg">Registrarse</button>
+
+            </div>
+
+
+            
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+
+  <!-- FOOTER -->
+  <div th:replace="fragments/footer :: footer"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

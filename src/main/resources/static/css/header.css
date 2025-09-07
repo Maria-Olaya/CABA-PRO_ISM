@@ -1,0 +1,68 @@
+/* ============================
+   📂 static/css/header.css
+   Estilos del header
+   ============================ */
+header {
+  background: linear-gradient(90deg,#ffffff,#fbfbfb);
+  box-shadow: 0 10px 30px rgba(16,24,40,0.12); /* 🔥 sombra permanente */
+  transition: background .25s ease;
+  z-index: 50;
+  position: sticky;
+  top: 0;
+}
+
+header .container { 
+  display:flex; 
+  align-items:center; 
+  justify-content:space-between; 
+  gap: 1rem; 
+}
+
+.logo { 
+  height:52px; 
+  transition: transform .28s ease; 
+  display:inline-block; 
+}
+
+.logo:hover { 
+  transform: scale(1.06); 
+}
+
+/* Links generales */
+.nav-link-text, .nav-link-naranja, .nav-link-verde {
+  font-weight: 500;
+  text-decoration: none;
+  position: relative;
+  padding: 6px 4px;
+  margin-left: 0.4rem;
+  transition: color 0.25s ease;
+}
+
+/* Subrayado animado */
+.nav-link-text::after,
+.nav-link-naranja::after,
+.nav-link-verde::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -4px;
+  height: 2px;
+  width: 0;
+  border-radius: 2px;
+  transition: width 0.28s ease;
+}
+
+/* Colores */
+.nav-link-text { color: var(--gris-texto); }
+.nav-link-text::after { background: var(--gris-texto); }
+.nav-link-text:hover { text-decoration: none; color: var(--gris-texto); }
+.nav-link-text:hover::after { width: 100%; }
+
+.nav-link-naranja { color: var(--naranja-logo); }
+.nav-link-naranja::after { background: var(--verde-logo); }
+.nav-link-naranja:hover { color: var(--verde-logo); }
+.nav-link-naranja:hover::after { width: 100%; }
+
+.nav-link-verde { color: var(--verde-logo); }
+.nav-link-verde::after { background: var(--naranja-logo); }
+.nav-link-verde:hover { color: var(--naranja-logo); }
+.nav-link-verde:hover::after { width: 100%; }

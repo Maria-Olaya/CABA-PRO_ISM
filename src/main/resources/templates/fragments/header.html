@@ -1,0 +1,66 @@
+<header>
+  <div class="container py-3">
+    <a href="/"><img src="/images/logo-caba-pro.png" alt="CABA Pro" class="logo"></a>
+
+    <nav class="d-none d-md-flex align-items-center">
+      <a href="/" class="nav-link-text">Inicio</a>
+
+      <!-- Usuario NO autenticado -->
+      <div sec:authorize="isAnonymous()">
+        <a href="/login" class="nav-link-naranja">Iniciar Sesión</a>
+      </div>
+
+      <!-- Usuario autenticado -->
+      <div sec:authorize="isAuthenticated()">
+        <a sec:authorize="hasRole('ADMIN')" href="/admin/arbitros" class="nav-link-naranja">Dashboard</a>
+        <a sec:authorize="hasRole('ADMIN')" href="/admin/arbitros/nuevo" class="nav-link-naranja">Crear árbitro</a>
+        <a sec:authorize="hasRole('ADMIN')" href="/torneos" class="nav-link-naranja">Torneos</a>
+        <a sec:authorize="hasRole('ADMIN')" href="/admin/tarifas/asignar" class="nav-link-naranja">Visualizar tarifas</a>
+        <a sec:authorize="hasRole('ADMIN')" href="/admin/liquidaciones" class="nav-link-naranja">Generar liquidaciones</a>
+
+        <a sec:authorize="hasRole('ARBITRO')" href="/arbitro/dashboard" class="nav-link-naranja">Dashboard</a>
+        <a sec:authorize="hasRole('ARBITRO')" href="/arbitro/edit" class="nav-link-naranja">Editar mi perfil</a>
+        <a sec:authorize="hasRole('ARBITRO')" href="/arbitro/asignaciones" class="nav-link-naranja">Mis asignaciones</a>
+        <a sec:authorize="hasRole('ARBITRO')" href="/arbitro/liquidaciones" class="nav-link-naranja">Mis liquidaciones</a>
+        
+        
+      
+
+
+        <a sec:authorize="!hasRole('ADMIN') and !hasRole('ARBITRO')" href="/" class="nav-link-naranja">Dashboard</a>
+
+        <form th:action="@{/logout}" method="post" style="display:inline">
+          <button type="submit" class="nav-link-naranja" style="background:none; border:none; padding:0; cursor:pointer;">Cerrar Sesión</button>
+        </form>
+      </div>
+    </nav>
+
+    <div class="d-md-none">
+      <button class="btn btn-sm btn-outline-secondary" type="button"
+        onclick="document.querySelector('.mobile-menu').classList.toggle('d-none')">☰</button>
+    </div>
+  </div>
+
+  <div class="mobile-menu d-none bg-white border-top">
+    <div class="p-3">
+      <a href="/" class="nav-link-text d-block mb-2">Inicio</a>
+
+      <!-- Usuario NO autenticado -->
+      <div sec:authorize="isAnonymous()" class="mt-2">
+        <a href="/login" class="nav-link-naranja d-block mb-2">Iniciar Sesión</a>
+        <a href="/registro" class="nav-link-verde d-block">Registrarse</a>
+      </div>
+
+      <!-- Usuario autenticado -->
+      <div sec:authorize="isAuthenticated()" class="mt-2">
+        <a sec:authorize="hasRole('ADMIN')" href="/admin/arbitros" class="nav-link-naranja d-block mb-2">Dashboard</a>
+        <a sec:authorize="hasRole('ARBITRO')" href="/arbitro/dashboard" class="nav-link-naranja d-block mb-2">Dashboard</a>
+        <a sec:authorize="!hasRole('ADMIN') and !hasRole('ARBITRO')" href="/" class="nav-link-naranja d-block mb-2">Dashboard</a>
+
+        <form th:action="@{/logout}" method="post">
+          <button type="submit" class="nav-link-naranja d-block" style="background:none; border:none; padding:0; cursor:pointer;">Cerrar Sesión</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
