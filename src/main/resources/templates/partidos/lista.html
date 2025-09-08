@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Lista de Partidos</title></head>
+<body>
+<h1>Lista de Partidos</h1>
+<a th:href="@{/partidos/nuevo}">Crear nuevo partido</a>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th><th>Fecha</th><th>Lugar</th><th>Estado</th>
+        <th>Local</th><th>Visitante</th><th>Torneo</th><th>Árbitros</th><th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="partido : ${partidos}">
+        <td th:text="${partido.idPartido}"></td>
+        <td th:text="${partido.fecha}"></td>
+        <td th:text="${partido.lugar}"></td>
+        <td th:text="${partido.estadoPartido}"></td>
+        <td th:text="${partido.equipoLocal}"></td>
+        <td th:text="${partido.equipoVisitante}"></td>
+        <td th:text="${partido.torneo.nombre}"></td>
+        <td>
+            <span th:each="arb : ${partido.arbitros}" th:text="${arb.nombre} + ' '"></span>
+        </td>
+        <td>
+            <a th:href="@{'/partidos/editar/' + ${partido.idPartido}}">Editar</a> |
+            <a th:href="@{'/partidos/eliminar/' + ${partido.idPartido}}"
+               onclick="return confirm('¿Eliminar este partido?');">Eliminar</a>
+            <a th:href="@{'/asignacion/crear?partidoId=' + ${partido.idPartido}}">Asignar árbitros</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
