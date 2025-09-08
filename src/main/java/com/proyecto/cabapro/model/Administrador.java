@@ -16,9 +16,11 @@ import jakarta.persistence.Table;
 @PrimaryKeyJoinColumn(name = "id") // usa la misma PK del padre
 public class Administrador extends Usuario {
     // Por ahora NO agregamos campos propios.
-   
+    // Si luego necesitas algo propio (p. ej. "oficina", "extensionTelefono"),
+    // los agregas aquí como propiedades normales.
     
     public Administrador() {
+        // Requerido por JPA
     }
 
     // Puedes agregar constructores de conveniencia si deseas.
