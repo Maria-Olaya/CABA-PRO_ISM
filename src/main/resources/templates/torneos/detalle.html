@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>CABA Pro - Detalle Torneo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Estilos globales -->
+  <link rel="stylesheet" href="/css/globals.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+  <!-- HEADER -->
+  <div th:replace="fragments/header :: header"></div>
+
+  <!-- CONTENIDO -->
+  <main class="container my-5">
+    <!-- Título torneo -->
+    <div class="mb-4">
+      <h1 class="fw-bold text-success">
+        Detalle Torneo: <span th:text="${torneo.nombre}"></span>
+      </h1>
+      <p><strong>Categoría:</strong> <span th:text="${torneo.categoria}"></span></p>
+      <p><strong>Fecha inicio:</strong> <span th:text="${torneo.fechaInicio}"></span></p>
+      <p><strong>Fecha fin:</strong> <span th:text="${torneo.fechaFin}"></span></p>
+    </div>
+
+    <!-- Botón crear partido -->
+    <div class="d-flex justify-content-end mb-3">
+      <a th:href="@{'/torneos/' + ${torneo.idTorneo} + '/partidos/nuevo'}" 
+        class="btn btn-caba-verde btn-md">
+        <i class="bi bi-plus-circle"></i> Crear nuevo partido
+      </a>
+
+
+
+    </div>
+
+    <!-- Tabla de partidos -->
+    <div class="table-responsive shadow-sm rounded">
+      <table class="table table-hover table-bordered align-middle bg-white">
+        <thead class="table-success text-center">
+          <tr>
+            <th>ID</th>
+            <th>Fecha</th>
+            <th>Lugar</th>
+            <th>Estado</th>
+            <th>Local</th>
+            <th>Visitante</th>
+            <th>Árbitros</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="partido : ${partidos}">
+            <td th:text="${partido.idPartido}" class="text-center"></td>
+            <td th:text="${partido.fecha}"></td>
+            <td th:text="${partido.lugar}"></td>
+            <td th:text="${partido.estadoPartido}"></td>
+            <td th:text="${partido.equipoLocal}"></td>
+            <td th:text="${partido.equipoVisitante}"></td>
+            <td>
+              <span th:each="arb : ${partido.arbitros}" th:text="${arb.nombre} + ' '"></span>
+            </td>
+            <td class="text-center">
+              <!-- Editar -->
+              <a th:href="@{'/partidos/editar/' + ${partido.idPartido}}" 
+                 class="btn btn-sm btn-caba-naranja" title="Editar">
+                 <i class="bi bi-pencil-square"></i>
+              </a>
+              <!-- Eliminar -->
+              <a th:href="@{'/torneos/' + ${torneo.idTorneo} + '/partidos/eliminar/' + ${partido.idPartido}}"
+                onclick="return confirm('¿Eliminar este partido?');"
+                class="btn btn-sm btn-caba-peligro" title="Eliminar">
+                <i class="bi bi-trash"></i>
+              </a>
+
+              <!-- Asignar árbitros -->
+              <a th:href="@{'/asignacion/crear?partidoId=' + ${partido.idPartido}}"
+                 class="btn btn-sm btn-caba-verde" title="Asignar árbitros">
+                 <i class="bi bi-person-check"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <div th:replace="fragments/footer :: footer"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

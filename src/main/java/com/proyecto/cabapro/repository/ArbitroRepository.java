@@ -6,8 +6,6 @@ import com.proyecto.cabapro.model.Arbitro;
 
 public interface ArbitroRepository extends JpaRepository<Arbitro, Integer> {
 
-    
-
 }
 
 
