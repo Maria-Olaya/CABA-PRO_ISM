@@ -14,8 +14,7 @@ import java.time.LocalDateTime;
     )
 )
 public class Tarifa {
-    @Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -40,24 +39,24 @@ public class Tarifa {
     @Column(name = "generado_en", nullable = false)
     private LocalDateTime generadoEn = LocalDateTime.now();
 
-    // ---- Getters & Setters ----
-    public Long getId() { return id; }
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "liquidacion_id")
+    private Liquidacion liquidacion;
 
+    // getters/setters...
+    public Long getId() { return id; }
     public Partido getPartido() { return partido; }
     public void setPartido(Partido partido) { this.partido = partido; }
-
     public Torneo getTorneo() { return torneo; }
     public void setTorneo(Torneo torneo) { this.torneo = torneo; }
-
     public Arbitro getArbitro() { return arbitro; }
     public void setArbitro(Arbitro arbitro) { this.arbitro = arbitro; }
-
     public Escalafon getEscalafon() { return escalafon; }
     public void setEscalafon(Escalafon escalafon) { this.escalafon = escalafon; }
-
     public BigDecimal getMonto() { return monto; }
     public void setMonto(BigDecimal monto) { this.monto = monto; }
-
     public LocalDateTime getGeneradoEn() { return generadoEn; }
     public void setGeneradoEn(LocalDateTime generadoEn) { this.generadoEn = generadoEn; }
+    public Liquidacion getLiquidacion() { return liquidacion; }
+    public void setLiquidacion(Liquidacion liquidacion) { this.liquidacion = liquidacion; }
 }
