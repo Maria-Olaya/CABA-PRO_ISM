@@ -1,0 +1,39 @@
+/* ============================
+   📂 Datos del árbitro
+============================ */
+.datos-arbitro {
+  border-left: 5px solid var(--verde-logo);
+  background-color: var(--blanco);
+  padding: 1.5rem; /* un poco más de espacio */
+  border-radius: var(--radius-card);
+  box-shadow: var(--card-shadow);
+  transition: transform var(--transition-speed);
+}
+
+.datos-arbitro:hover {
+  transform: translateY(-2px); /* ligero efecto hover en la información del árbitro (nombre, correo, especialidad) */
+}
+
+.nombre-arbitro {
+  color: var(--naranja-logo);
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+/* ============================
+   📂 Fechas disponibles
+============================ */
+.lista-fechas-arbitro .list-group-item {
+  background-color: #eaf6ea;
+  border: none;
+  color: var(--gris-texto);
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.lista-fechas-arbitro .list-group-item:hover {
+  background-color: var(--verde-logo);
+  color: var(--blanco);
+  transform: scale(1.02);
+}
