@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Asignar tarifas por Torneo</title>
+
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/globals.css">
+  <link rel="stylesheet" href="/css/forms.css">
+  <link rel="stylesheet" href="/css/home.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+</head>
+<body>
+
+  <div th:replace="fragments/header :: header"></div>
+
+  <main class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="card p-4 shadow-sm rounded-3">
+          <h2 class="mb-4 text-center">Asignar tarifas por Torneo</h2>
+
+        
+          <p th:if="${msg}" class="text-success" th:text="${msg}"></p>
+          <p th:if="${err}" class="text-danger" th:text="${err}"></p>
+
+          <!-- Selector de torneo -->
+          <form th:action="@{/admin/tarifas/asignar}" method="get" class="mb-4">
+          <div class="mb-3">
+            <label class="form-label">Torneo:</label>
+            <select name="torneoId" class="form-select" required>
+              <option th:each="t : ${torneos}"
+                      th:value="${t.idTorneo}"
+                      th:selected="${torneo != null and torneo.idTorneo == t.idTorneo}"
+                      th:text="|${t.nombre} (${t.categoria})|"></option>
+            </select>
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-cta btn-caba-verde-outline btn-sm">Ver</button>
+          </div>
+        </form>
+
+
+          <div th:if="${torneo != null}">
+            <h4 class="mb-3" th:text="|Torneo: ${torneo.nombre} - Categoría: ${torneo.categoria}|"></h4>
+
+            <!-- Tabla de asignación de tarifas -->
+            <div class="table-responsive mb-4">
+              <table class="table table-striped table-hover align-middle">
+                <thead class="table-dark">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Lugar</th>
+                    <th scope="col">Partido</th>
+                    <th scope="col">Árbitro</th>
+                    <th scope="col">Escalafón</th>
+                    <th scope="col">Valor del partido</th>
+                    <th scope="col">Adicional por escalafón</th>
+                    <th scope="col">Total</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="r, st : ${filas}">
+                    <td th:text="${st.index + 1}">1</td>
+                    <td th:text="${#temporals.format(r.partido.fecha, 'yyyy-MM-dd HH:mm')}">2025-08-28 20:00</td>
+                    <td th:text="${r.partido.lugar}">Coliseo</td>
+                    <td th:text="${r.partido.equipoLocal + ' vs ' + r.partido.equipoVisitante}">A vs B</td>
+                    <td th:text="${r.arbitro.nombre + ' ' + r.arbitro.apellido}">Nombre Apellido</td>
+                    <td th:text="${r.arbitro.escalafon}">INTERNACIONAL_FIBA</td>
+                    <td th:text="${#numbers.formatDecimal(r.base,0,'POINT',2,'COMMA')}">0.00</td>
+                    <td th:text="${#numbers.formatDecimal(r.adicional,0,'POINT',2,'COMMA')}">0.00</td>
+                    <td th:text="${#numbers.formatDecimal(r.total,0,'POINT',2,'COMMA')}">0.00</td>
+                  </tr>
+                  <tr th:if="${#lists.isEmpty(filas)}">
+                    <td colspan="9" class="text-center">No hay partidos con árbitros en este torneo.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Resumen por árbitro -->
+            <h4>Resumen por árbitro</h4>
+            <div class="table-responsive">
+              <table class="table table-striped table-hover align-middle">
+                <thead class="table-dark">
+                  <tr>
+                    <th>Árbitro</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="e : ${resumen}">
+                    <td th:text="${e.key.nombre + ' ' + e.key.apellido}">Nombre Apellido</td>
+                    <td th:text="${#numbers.formatDecimal(e.value,0,'POINT',2,'COMMA')}">0.00</td>
+                  </tr>
+                  <tr th:if="${#lists.isEmpty(resumen)}">
+                    <td colspan="2" class="text-center">No hay totales que mostrar.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div th:replace="fragments/footer :: footer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

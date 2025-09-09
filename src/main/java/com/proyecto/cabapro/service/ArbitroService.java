@@ -7,13 +7,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional
 public class ArbitroService {
 
-    // ===== Excepciones =====
+    // ===== Excepciones de negocio locales al Service =====
     public static class DuplicateEmailException extends RuntimeException {
         public DuplicateEmailException(String message) { super(message); }
     }
@@ -28,12 +29,18 @@ public class ArbitroService {
         this.arbitroRepo = arbitroRepo;
     }
 
-    // =============== (DESDE ADMIN) ===============
-    public List<Arbitro> listar() { return arbitroRepo.findAll(); }
+    // =============== CRUD (ADMIN) ===============
 
-    public Arbitro buscar(Integer id) { return arbitroRepo.findById(id).orElse(null); }
+    public List<Arbitro> listar() {
+        return arbitroRepo.findAll();
+    }
+
+    public Arbitro buscar(Integer id) {
+        return arbitroRepo.findById(id).orElse(null);
+    }
 
     public Arbitro crear(Arbitro a) {
+        // Reglas de negocio
         if (a.getCorreo() == null || a.getCorreo().isBlank()) {
             throw new IllegalArgumentException("El correo es obligatorio");
         }
@@ -44,6 +51,7 @@ public class ArbitroService {
             throw new PasswordRequiredOnCreateException("La contraseña es obligatoria al crear el árbitro");
         }
 
+        // Transformaciones
         a.setContrasena(encoder.encode(a.getContrasena()));
         if (a.getRol() == null || a.getRol().isBlank()) {
             a.setRol("ROLE_ARBITRO");
@@ -55,6 +63,7 @@ public class ArbitroService {
         Arbitro actual = buscar(id);
         if (actual == null) return null;
 
+        // Reglas: correo único (si cambió)
         if (datos.getCorreo() == null || datos.getCorreo().isBlank()) {
             throw new IllegalArgumentException("El correo es obligatorio");
         }
@@ -64,10 +73,12 @@ public class ArbitroService {
             }
         }
 
+        // Usuario
         actual.setNombre(datos.getNombre());
         actual.setApellido(datos.getApellido());
         actual.setCorreo(datos.getCorreo());
 
+        // Rol: mantener si no envían, y nunca dejar vacío
         if (datos.getRol() != null && !datos.getRol().isBlank()) {
             actual.setRol(datos.getRol());
         }
@@ -75,13 +86,20 @@ public class ArbitroService {
             actual.setRol("ROLE_ARBITRO");
         }
 
+        // Contraseña solo si llega no vacía
         if (datos.getContrasena() != null && !datos.getContrasena().isBlank()) {
             actual.setContrasena(encoder.encode(datos.getContrasena()));
         }
 
+        // Árbitro
         actual.setUrlFoto(datos.getUrlFoto());
         actual.setEspecialidad(datos.getEspecialidad());
         actual.setEscalafon(datos.getEscalafon());
+
+        if (datos.getFechasDisponibles() != null) {
+            actual.getFechasDisponibles().clear();
+            actual.getFechasDisponibles().addAll(datos.getFechasDisponibles());
+        }
 
         return arbitroRepo.save(actual);
     }

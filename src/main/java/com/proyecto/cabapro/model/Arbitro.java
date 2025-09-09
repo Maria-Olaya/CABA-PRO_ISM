@@ -1,14 +1,12 @@
 package com.proyecto.cabapro.model;
 
-import java.time.LocalDate;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.proyecto.cabapro.enums.Escalafon;
 import com.proyecto.cabapro.enums.Especialidad;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Entity
@@ -27,7 +25,7 @@ public class Arbitro extends Usuario {
     @NotNull(message = "El escalafón es obligatorio")
     private Escalafon escalafon;
 
-
+    // ---- Disponibilidad por FECHAS  ----
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
         name = "disponibilidades_fecha",
@@ -37,7 +35,16 @@ public class Arbitro extends Usuario {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Set<LocalDate> fechasDisponibles = new HashSet<>();
 
-    
+    // ---- Relaciones  ----
+    @OneToMany(mappedBy = "arbitro", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Asignacion> asignaciones = new ArrayList<>();
+
+    @OneToMany(mappedBy = "arbitro", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Tarifa> tarifas = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "arbitros", fetch = FetchType.LAZY)
+    private List<Partido> partidos = new ArrayList<>();
+
     public Arbitro() {}
 
     public Arbitro(String nombre, String apellido, String correo, String contrasena, String rol,
@@ -61,4 +68,12 @@ public class Arbitro extends Usuario {
     public Set<LocalDate> getFechasDisponibles() { return fechasDisponibles; }
     public void setFechasDisponibles(Set<LocalDate> fechasDisponibles) { this.fechasDisponibles = fechasDisponibles; }
 
+    public List<Asignacion> getAsignaciones() { return asignaciones; }
+    public void setAsignaciones(List<Asignacion> asignaciones) { this.asignaciones = asignaciones; }
+
+    public List<Tarifa> getTarifas() { return tarifas; }
+    public void setTarifas(List<Tarifa> tarifas) { this.tarifas = tarifas; }
+
+    public List<Partido> getPartidos() { return partidos; }
+    public void setPartidos(List<Partido> partidos) { this.partidos = partidos; }
 }

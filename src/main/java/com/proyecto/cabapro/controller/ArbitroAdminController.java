@@ -4,7 +4,9 @@ import com.proyecto.cabapro.controller.forms.ArbitroForm;
 import com.proyecto.cabapro.enums.Escalafon;
 import com.proyecto.cabapro.enums.Especialidad;
 import com.proyecto.cabapro.model.Arbitro;
+import com.proyecto.cabapro.model.Asignacion;
 import com.proyecto.cabapro.service.ArbitroService;
+import com.proyecto.cabapro.service.AsignacionService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,17 +20,30 @@ import java.util.List;
 public class ArbitroAdminController {
 
     private final ArbitroService service;
+    private final AsignacionService asignacionService;
 
-    public ArbitroAdminController(ArbitroService service) {
+    public ArbitroAdminController(ArbitroService service, AsignacionService asignacionService) {
         this.service = service;
+        this.asignacionService = asignacionService;
     }
 
-    // ================= LISTADO =================
+    // ================= LISTADO (panel central) =================
     @GetMapping
-    public String list(Model model) {
-        List<Arbitro> arbitros = service.listar();
-        model.addAttribute("arbitros", arbitros);
-        return "admin/arbitros/list"; // ruta de tu HTML
+    public String list(@RequestParam(value = "arbitroId", required = false) Integer arbitroId,
+                       Model model) {
+        model.addAttribute("arbitros", service.listar());
+
+        if (arbitroId != null) {
+            Arbitro sel = service.buscar(arbitroId);
+            if (sel != null) {
+                List<Asignacion> asignaciones = asignacionService.listarPorArbitroId(arbitroId);
+                model.addAttribute("arbitroSel", sel);
+                model.addAttribute("asignacionesSel", asignaciones);
+            } else {
+                model.addAttribute("err", "Árbitro no encontrado (id=" + arbitroId + ")");
+            }
+        }
+        return "admin/arbitros/list";
     }
 
     // ================= CREAR =================
