@@ -1,3 +1,4 @@
+// src/main/java/com/proyecto/cabapro/controller/ArbitroController.java
 package com.proyecto.cabapro.controller;
 
 import com.proyecto.cabapro.model.Arbitro;
@@ -7,6 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/arbitro/edit")
@@ -18,26 +22,36 @@ public class ArbitroController {
         this.arbitroService = arbitroService;
     }
 
-    // GET: muestra el formulario con los datos actuales.
+    // GET: muestra el formulario con los datos actuales y las fechas bloqueadas
     @GetMapping
     public String verPerfil(@AuthenticationPrincipal(expression = "username") String correo, Model model) {
         Arbitro arbitro = arbitroService.getActual(correo);
-        model.addAttribute("arbitro", arbitro);  
+
+        // Fechas bloqueadas (asignaciones ACEPTADAS) para pintar en la vista
+        Set<LocalDate> bloqueadas = arbitroService.fechasBloqueadas(arbitro);
+
+        model.addAttribute("arbitro", arbitro);
+        model.addAttribute("bloqueadas", bloqueadas);
         return "arbitro/perfil"; // templates/arbitro/perfil.html
     }
 
-    // POST: procesa el form y delega la actualización al Service. 
+    // POST: procesa el form y delega la actualización al Service.
     @PostMapping
     public String actualizarPerfil(@AuthenticationPrincipal(expression = "username") String correo,
                                    @ModelAttribute("arbitro") Arbitro form,
-                                   BindingResult binding) {
+                                   BindingResult binding,
+                                   Model model) {
         if (binding.hasErrors()) {
+            Arbitro actual = arbitroService.getActual(correo);
+            Set<LocalDate> bloqueadas = arbitroService.fechasBloqueadas(actual);
+            model.addAttribute("bloqueadas", bloqueadas);
             return "arbitro/perfil";
         }
+
         arbitroService.actualizarPerfil(
             correo,
             form.getUrlFoto(),
-            form.getFechasDisponibles()
+            form.getFechasDisponibles() 
         );
         return "redirect:/arbitro/dashboard?ok";
     }
