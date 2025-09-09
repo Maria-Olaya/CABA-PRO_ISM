@@ -1,14 +1,19 @@
 package com.proyecto.cabapro.service;
 
+import com.proyecto.cabapro.enums.EstadoAsignacion;
 import com.proyecto.cabapro.model.Arbitro;
+import com.proyecto.cabapro.model.Asignacion;
 import com.proyecto.cabapro.repository.ArbitroRepository;
+import com.proyecto.cabapro.repository.AsignacionRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -23,10 +28,12 @@ public class ArbitroService {
     }
 
     private final ArbitroRepository arbitroRepo;
+    private final AsignacionRepository asignacionRepo;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    public ArbitroService(ArbitroRepository arbitroRepo) {
+    public ArbitroService(ArbitroRepository arbitroRepo, AsignacionRepository asignacionRepo) {
         this.arbitroRepo = arbitroRepo;
+        this.asignacionRepo= asignacionRepo;
     }
 
     // =============== CRUD (ADMIN) ===============
@@ -111,7 +118,7 @@ public class ArbitroService {
         }
     }
 
-    // =============== PERFIL (ÁRBITRO) ===============
+     // =============== PERFIL (ÁRBITRO) ===============
     public Arbitro getActual(String correo) {
         return arbitroRepo.findByCorreo(correo)
                 .orElseThrow(() -> new IllegalArgumentException("Árbitro no encontrado para correo: " + correo));
@@ -121,11 +128,24 @@ public class ArbitroService {
         Arbitro a = getActual(correo);
         a.setUrlFoto(urlFoto);
 
+        Set<LocalDate> resultado = new HashSet<>();
+        if (nuevasFechas != null) resultado.addAll(nuevasFechas);
+        resultado.addAll(fechasBloqueadas(a));
+
         a.getFechasDisponibles().clear();
-        if (nuevasFechas != null) {
-            a.getFechasDisponibles().addAll(nuevasFechas);
-        }
+        a.getFechasDisponibles().addAll(resultado);
 
         arbitroRepo.save(a);
     }
+
+    // =============== FECHAS BLOQUEADAS ===============
+
+    @Transactional(readOnly = true)
+    public Set<LocalDate> fechasBloqueadas(Arbitro a) {
+        return asignacionRepo.findByArbitroAndEstado(a, EstadoAsignacion.ACEPTADA)
+                .stream()
+                .map(Asignacion::getFechaAsignacion)
+                .collect(Collectors.toSet());
+    }
+
 }

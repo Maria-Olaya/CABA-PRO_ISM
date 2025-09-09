@@ -22,15 +22,21 @@ public class AsignacionService {
     private final AsignacionRepository asignacionRepo;
     private final PartidoRepository partidoRepo;
     private final ArbitroService arbitroService;
+    private final MailService mailService;
+    private final TarifaService tarifaService;
 
     public AsignacionService(
             AsignacionRepository asignacionRepo,
             PartidoRepository partidoRepo,
-            ArbitroService arbitroService
+            ArbitroService arbitroService,
+            MailService mailService,
+            TarifaService tarifaService
     ) {
         this.asignacionRepo = asignacionRepo;
         this.partidoRepo = partidoRepo;
         this.arbitroService = arbitroService;
+        this.tarifaService = tarifaService;
+        this.mailService = mailService;
     }
 
     // ============== CREATE / UPDATE (dominio) ==============
@@ -43,7 +49,9 @@ public class AsignacionService {
 
         validarPrecondicionesDeAsignacion(a, p, f);
 
-        return asignacionRepo.save(construirPendiente(a, p));
+        Asignacion asg = asignacionRepo.save(construirPendiente(a, p));
+        mailService.notificarNuevaAsignacion(asg);  // Se envía correo
+        return asg;
     }
 
     /** Transición: PENDIENTE -> ACEPTADA (desde el árbitro autenticado por correo) */
@@ -216,7 +224,16 @@ public class AsignacionService {
         asg.setTorneo(p.getTorneo());
         asg.setFechaAsignacion(fechaPartido(p));
         asg.setEstado(EstadoAsignacion.PENDIENTE);
-        asg.setMonto(BigDecimal.ZERO); // sin Tarifa, monto fijo 0
+
+        BigDecimal monto = BigDecimal.ZERO;
+        if (p.getTorneo() != null
+                && p.getTorneo().getCategoria() != null
+                && a != null
+                && a.getEscalafon() != null) {
+            monto = tarifaService.totalPor(p.getTorneo().getCategoria(), a.getEscalafon());
+        }
+        asg.setMonto(monto); // valor "congelado"
         return asg;
+
     }
 }

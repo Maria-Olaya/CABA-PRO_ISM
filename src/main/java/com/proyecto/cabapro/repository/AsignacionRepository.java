@@ -29,4 +29,7 @@ public interface AsignacionRepository extends JpaRepository<Asignacion, Long> {
     // Para listar las asignaciones de un partido usado en (especialidas ocupadas)
     List<Asignacion> findByPartido(Partido partido);
 
+    // Retorna todas las asignaciones de un árbitro específico que ya fueron aceptadas
+    List<Asignacion> findByArbitroAndEstado(Arbitro arbitro, EstadoAsignacion estado);
+
 }
