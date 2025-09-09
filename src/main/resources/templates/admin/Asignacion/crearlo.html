@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Asignar árbitro a partido</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Estilos globales -->
+  <link rel="stylesheet" href="/css/globals.css">
+  <link rel="stylesheet" href="/css/forms.css">
+  <link rel="stylesheet" href="/css/home.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+</head>
+<body>
+  <!-- HEADER -->
+  <div th:replace="fragments/header :: header"></div>
+
+  <main class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+
+        <!-- Título -->
+        <div class="card p-4 shadow-sm rounded-3 mb-4">
+          <h2 class="mb-4 text-center">Asignar árbitro a partido</h2>
+
+          <!-- Mensajes -->
+          <p th:if="${msg}" class="text-success" th:text="${msg}"></p>
+          <p th:if="${err}" class="text-danger" th:text="${err}"></p>
+
+          <!-- Selector de partido (si aplicara como torneos) -->
+          <div th:if="${partido != null}">
+            <p class="mb-3">
+              <strong>Partido:</strong> 
+              <span th:text="${#temporals.format(partido.fecha,'yyyy-MM-dd HH:mm')}"></span>
+              — <span th:text="${partido.equipoLocal + ' vs ' + partido.equipoVisitante}"></span>
+              <span th:if="${partido.torneo != null}"> (<span th:text="${partido.torneo.nombre}"></span>)</span>
+            </p>
+          </div>
+
+          <!-- Formulario de asignación -->
+          <form th:action="@{/asignacion/crear/uno}" method="post" class="mb-4 needs-validation" novalidate>
+            <div th:if="${_csrf != null}">
+              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            </div>
+            <input type="hidden" name="partidoId" th:value="${partido.idPartido}"/>
+
+            <div class="mb-3">
+              <label for="arbitroId" class="form-label fw-bold">Árbitro</label>
+              <select id="arbitroId" name="arbitroId" class="form-select" required>
+                <option value="" disabled selected>— elegir —</option>
+
+                <optgroup label="Disponibles">
+                  <option th:each="a : ${arbitros}" 
+                          th:if="${
+                            (yaAsigIds == null or !yaAsigIds.contains(a.id))
+                            and (noDispIds == null or !noDispIds.contains(a.id))
+                            and (espOcupadas == null or a.especialidad == null or !espOcupadas.contains(a.especialidad))
+                          }"
+                          th:value="${a.id}" 
+                          th:text="${a.nombre + ' ' + a.apellido + ' — ' + (a.especialidad != null ? a.especialidad : 'Sin especialidad')}">
+                  </option>
+                </optgroup>
+
+                <optgroup label="Creada la asignación">
+                  <option th:each="a : ${arbitros}" th:if="${yaAsigIds != null and yaAsigIds.contains(a.id)}" 
+                          th:value="${a.id}" disabled
+                          th:text="${a.nombre + ' ' + a.apellido + ' — ' + (a.especialidad != null ? a.especialidad : 'Sin especialidad')}">
+                  </option>
+                </optgroup>
+
+                <optgroup label="No disponibles para la fecha">
+                  <option th:each="a : ${arbitros}" th:if="${noDispIds != null and noDispIds.contains(a.id)}" 
+                          th:value="${a.id}" disabled
+                          th:text="${a.nombre + ' ' + a.apellido + ' — ' + (a.especialidad != null ? a.especialidad : 'Sin especialidad')}">
+                  </option>
+                </optgroup>
+
+                <optgroup label="Especialidad ya cubierta">
+                  <option th:each="a : ${arbitros}" th:if="${espOcupadas != null and a.especialidad != null and espOcupadas.contains(a.especialidad)
+                                                   and (yaAsigIds == null or !yaAsigIds.contains(a.id))
+                                                   and (noDispIds == null or !noDispIds.contains(a.id))}" 
+                          th:value="${a.id}" disabled
+                          th:text="${a.nombre + ' ' + a.apellido + ' — ' + a.especialidad + ' [ESPEC. CUBIERTA]'}">
+                  </option>
+                </optgroup>
+
+              </select>
+            </div>
+
+            <div class="d-grid mt-3">
+              <button type="submit" class="btn btn-cta btn-caba-verde btn-lg">Crear</button>
+            </div>
+          </form>
+
+          <!-- Árbitros asignados -->
+          <div th:if="${aceptadas != null and !#lists.isEmpty(aceptadas)}" class="mt-4">
+            <h5>Árbitros asignados</h5>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item" th:each="asig : ${aceptadas}">
+                <strong th:text="${asig.arbitro.nombre + ' ' + asig.arbitro.apellido}"></strong>
+                — especialidad: <span th:text="${asig.arbitro.especialidad != null ? asig.arbitro.especialidad : '—'}"></span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Especialidades faltantes / ok -->
+          <div class="mt-4">
+            <div th:if="${faltanEsp != null and !#lists.isEmpty(faltanEsp)}" class="text-danger fw-bold mb-2">
+              ⚠ Faltan especialidades:
+              <span th:each="e, st : ${faltanEsp}">
+                <strong th:text="${e}"></strong><span th:if="${!st.last}">, </span>
+              </span>
+            </div>
+            <div th:if="${faltanEsp != null and #lists.isEmpty(faltanEsp)}" class="text-success fw-bold mb-2">
+              ✔ Todas las especialidades requeridas están cubiertas.
+            </div>
+            <p class="mb-0"><em>¡Administrador! Solo un árbitro por especialidad por partido.</em></p>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <div th:replace="fragments/footer :: footer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
