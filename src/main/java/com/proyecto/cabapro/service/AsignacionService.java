@@ -95,6 +95,13 @@ public class AsignacionService {
         return asignacionRepo.findByPartidoAndEstado(p, EstadoAsignacion.ACEPTADA);
     }
 
+    @Transactional(readOnly = true)
+    public List<Asignacion> listarPorArbitroId(Integer arbitroId) {
+        Arbitro a = arbitroService.buscar(arbitroId);
+        if (a == null) throw new IllegalArgumentException("Árbitro no encontrado.");
+        return asignacionRepo.findByArbitroOrderByFechaAsignacionDesc(a);
+    }
+
     // ======= Soporte a vistas / consultas de dominio =======
     @Transactional(readOnly = true)
     public List<Arbitro> listarArbitros() {
