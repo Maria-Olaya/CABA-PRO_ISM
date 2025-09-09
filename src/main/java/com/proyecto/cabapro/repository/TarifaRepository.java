@@ -12,16 +12,14 @@ public interface TarifaRepository extends JpaRepository<Tarifa, Long> {
     Optional<Tarifa> findByPartidoAndArbitro(Partido partido, Arbitro arbitro);
 
     // Para listar por torneo
-    List<Tarifa> findByTorneo(Torneo torneo);
     List<Tarifa> findByTorneo_IdTorneo(int torneoId);
 
-    // TarifaRepository
     // Todas las tarifas de un árbitro, ordenadas por fecha de partido
     List<Tarifa> findByArbitroOrderByPartido_FechaAsc(Arbitro arbitro);
     
     boolean existsByPartidoAndArbitro(Partido partido, Arbitro arbitro);
 
-
+    List<Tarifa> findByArbitroAndLiquidacionIsNullOrderByGeneradoEnAsc(Arbitro arbitro);
 
 }
 

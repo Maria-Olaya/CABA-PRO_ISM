@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class ArbitroService {
 
-    // ===== Excepciones de negocio locales al Service =====
+    // ===== Excepciones  =====
     public static class DuplicateEmailException extends RuntimeException {
         public DuplicateEmailException(String message) { super(message); }
     }
@@ -36,7 +36,7 @@ public class ArbitroService {
         this.asignacionRepo= asignacionRepo;
     }
 
-    // =============== CRUD (ADMIN) ===============
+    // =============== (DESDE ADMIN) ===============
 
     public List<Arbitro> listar() {
         return arbitroRepo.findAll();
@@ -58,7 +58,7 @@ public class ArbitroService {
             throw new PasswordRequiredOnCreateException("La contraseña es obligatoria al crear el árbitro");
         }
 
-        // Transformaciones
+       
         a.setContrasena(encoder.encode(a.getContrasena()));
         if (a.getRol() == null || a.getRol().isBlank()) {
             a.setRol("ROLE_ARBITRO");
@@ -70,7 +70,7 @@ public class ArbitroService {
         Arbitro actual = buscar(id);
         if (actual == null) return null;
 
-        // Reglas: correo único (si cambió)
+        
         if (datos.getCorreo() == null || datos.getCorreo().isBlank()) {
             throw new IllegalArgumentException("El correo es obligatorio");
         }
@@ -80,7 +80,7 @@ public class ArbitroService {
             }
         }
 
-        // Usuario
+        
         actual.setNombre(datos.getNombre());
         actual.setApellido(datos.getApellido());
         actual.setCorreo(datos.getCorreo());
@@ -98,7 +98,7 @@ public class ArbitroService {
             actual.setContrasena(encoder.encode(datos.getContrasena()));
         }
 
-        // Árbitro
+       
         actual.setUrlFoto(datos.getUrlFoto());
         actual.setEspecialidad(datos.getEspecialidad());
         actual.setEscalafon(datos.getEscalafon());
@@ -119,6 +119,7 @@ public class ArbitroService {
     }
 
      // =============== PERFIL (ÁRBITRO) ===============
+
     public Arbitro getActual(String correo) {
         return arbitroRepo.findByCorreo(correo)
                 .orElseThrow(() -> new IllegalArgumentException("Árbitro no encontrado para correo: " + correo));

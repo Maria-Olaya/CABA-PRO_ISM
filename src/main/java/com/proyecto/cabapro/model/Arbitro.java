@@ -42,6 +42,9 @@ public class Arbitro extends Usuario {
     @OneToMany(mappedBy = "arbitro", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Tarifa> tarifas = new ArrayList<>();
 
+    @OneToMany(mappedBy = "arbitro", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Liquidacion> liquidaciones = new ArrayList<>();
+
     @ManyToMany(mappedBy = "arbitros", fetch = FetchType.LAZY)
     private List<Partido> partidos = new ArrayList<>();
 
@@ -73,6 +76,9 @@ public class Arbitro extends Usuario {
 
     public List<Tarifa> getTarifas() { return tarifas; }
     public void setTarifas(List<Tarifa> tarifas) { this.tarifas = tarifas; }
+
+    public List<Liquidacion> getLiquidaciones() { return liquidaciones; }
+    public void setLiquidaciones(List<Liquidacion> liquidaciones) { this.liquidaciones = liquidaciones; }
 
     public List<Partido> getPartidos() { return partidos; }
     public void setPartidos(List<Partido> partidos) { this.partidos = partidos; }
