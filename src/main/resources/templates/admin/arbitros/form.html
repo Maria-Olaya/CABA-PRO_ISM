@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${modo} == 'editar' ? 'Editar Árbitro' : 'Nuevo Árbitro'">Árbitro</title>
+
+ 
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/globals.css">
+  <link rel="stylesheet" href="/css/forms.css">
+  <link rel="stylesheet" href="/css/home.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+</head>
+<body>
+  
+  <div th:replace="fragments/header :: header"></div>
+
+  <!-- FORMULARIO -->
+  <main class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="card p-4 shadow-sm rounded-3">
+          <h2 class="mb-4 text-center" th:text="${modo} == 'editar' ? 'Editar Árbitro' : 'Nuevo Árbitro'"></h2>
+
+          <form th:action="@{${actionUrl}}" th:object="${form}" method="post" class="needs-validation" novalidate>
+          
+            <div th:if="${_csrf != null}">
+              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            </div>
+
+            
+            <input type="hidden" th:field="*{id}"/>
+
+            <!-- Nombre -->
+            <div class="mb-3">
+              <label class="form-label">Nombre</label>
+              <input th:field="*{nombre}" class="form-control" required/>
+              <div class="text-danger small" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
+            </div>
+
+            <!-- Apellido -->
+            <div class="mb-3">
+              <label class="form-label">Apellido</label>
+              <input th:field="*{apellido}" class="form-control" required/>
+              <div class="text-danger small" th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></div>
+            </div>
+
+            <!-- Correo -->
+            <div class="mb-3">
+              <label class="form-label">Correo</label>
+              <input th:field="*{correo}" type="email" class="form-control" required/>
+              <div class="text-danger small" th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"></div>
+            </div>
+
+            <!-- Contraseña  -->
+            <div class="mb-3">
+              <label class="form-label">Contraseña</label>
+              <input th:field="*{contrasena}" type="password" class="form-control"
+                     th:attr="required=${modo} == 'crear'"/>
+              <div class="form-text" th:if="${modo} == 'editar'">
+                Déjala en blanco si no deseas cambiarla.
+              </div>
+              <div class="text-danger small" th:if="${#fields.hasErrors('contrasena')}" th:errors="*{contrasena}"></div>
+            </div>
+
+            <!-- URL Foto -->
+            <div class="mb-3">
+              <label class="form-label">URL Foto</label>
+              <input th:field="*{urlFoto}" type="url" class="form-control" placeholder="https://..." required/>
+              <div class="text-danger small" th:if="${#fields.hasErrors('urlFoto')}" th:errors="*{urlFoto}"></div>
+            </div>
+
+            <!-- Especialidad -->
+            <div class="mb-3">
+              <label class="form-label">Especialidad</label>
+              <select th:field="*{especialidad}" class="form-select" required>
+                <option value="" disabled th:selected="${form.especialidad == null}">-- Selecciona --</option>
+                <option th:each="e : ${especialidades}" th:value="${e}" th:text="${e}"></option>
+              </select>
+              <div class="text-danger small" th:if="${#fields.hasErrors('especialidad')}" th:errors="*{especialidad}"></div>
+            </div>
+
+            <!-- Escalafón -->
+            <div class="mb-3">
+              <label class="form-label">Escalafón</label>
+              <select th:field="*{escalafon}" class="form-select" required>
+                <option value="" disabled th:selected="${form.escalafon == null}">-- Selecciona --</option>
+                <option th:each="e : ${escalafones}" th:value="${e}" th:text="${e}"></option>
+              </select>
+              <div class="text-danger small" th:if="${#fields.hasErrors('escalafon')}" th:errors="*{escalafon}"></div>
+            </div>
+
+            <!-- Botón -->
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-cta btn-caba-naranja btn-lg"
+                      th:text="${modo} == 'editar' ? 'Actualizar' : 'Guardar'">Guardar</button>
+            </div>
+          </form>
+
+          <div class="mt-3 text-center">
+            <a th:href="@{/admin/arbitros}" class="text-decoration-none">&larr; Volver</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  
+  <div th:replace="fragments/footer :: footer"></div>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
