@@ -1,8 +1,11 @@
+// NUEVO - si
 package com.proyecto.cabapro.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.proyecto.cabapro.enums.CategoriaTorneo;
 import com.proyecto.cabapro.enums.TipoTorneo;
 
@@ -16,9 +19,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "torneos")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Torneo {
 
     @Id
@@ -37,7 +42,29 @@ public class Torneo {
     private LocalDateTime fechaFin;
 
     @OneToMany(mappedBy = "torneo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)  // cargar partidos solo si los pides
+    @JsonManagedReference // 🔹 Maneja relación con Partido
     private List<Partido> partidos;
+
+        @Transient // No se guarda en la BD
+        private String categoriaTraducida;
+
+
+        @Transient
+        private String tipoTraducido;
+
+        public String getTipoTraducido() { return tipoTraducido; }
+        public void setTipoTraducido(String tipoTraducido) { this.tipoTraducido = tipoTraducido; }
+
+
+        // GETTER Y SETTER
+        public String getCategoriaTraducida() {
+            return categoriaTraducida;
+        }
+
+        public void setCategoriaTraducida(String categoriaTraducida) {
+            this.categoriaTraducida = categoriaTraducida;
+        }
+
 
     // Getters y Setters
     public int getIdTorneo() {

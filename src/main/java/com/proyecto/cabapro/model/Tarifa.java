@@ -1,5 +1,8 @@
+// NUEVO - si
 package com.proyecto.cabapro.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.proyecto.cabapro.enums.Escalafon;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -13,20 +16,24 @@ import java.time.LocalDateTime;
         columnNames = {"partido_id", "arbitro_id"}
     )
 )
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Tarifa {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "partido_id", nullable = false)
+    @JsonIgnoreProperties({"arbitros", "torneo"}) // ⚙️ Evita bucles Partido↔Arbitro↔Torneo
     private Partido partido;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "torneo_id", nullable = false)
+    @JsonIgnoreProperties("partidos") // ⚙️ Evita bucle con Torneo
     private Torneo torneo;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "arbitro_id", nullable = false)
+    @JsonBackReference // 🔹 Rompe ciclo con Arbitro
     private Arbitro arbitro;
 
     @Enumerated(EnumType.STRING)
@@ -41,6 +48,7 @@ public class Tarifa {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "liquidacion_id")
+    @JsonIgnoreProperties("tarifas") // ⚙️ Evita recursión
     private Liquidacion liquidacion;
 
     // getters/setters...

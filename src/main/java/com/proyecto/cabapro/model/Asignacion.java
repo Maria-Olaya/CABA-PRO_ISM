@@ -1,12 +1,17 @@
+// NUEVO - si
 package com.proyecto.cabapro.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.proyecto.cabapro.enums.EstadoAsignacion;
+
 import jakarta.persistence.*;
 import java.math.BigDecimal;            
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "asignaciones")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Asignacion {
 
     @Id
@@ -16,16 +21,19 @@ public class Asignacion {
     // Árbitro dueño
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "arbitro_id", nullable = false)
+    @JsonBackReference // 🔹 Rompe ciclo con Arbitro
     private Arbitro arbitro;
 
     // Partido asignado (OBLIGATORIO)
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "partido_id", nullable = false)
+    @JsonBackReference  // 👉 indica el lado "hijo", se ignora al serializar
     private Partido partido;
 
     // Torneo (se toma del partido)
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "torneo_id", nullable = false)
+    @JsonIgnoreProperties("partidos") // ⚙️ Torneo puede tener muchos partidos
     private Torneo torneo;
 
     // Fecha (copia de la fecha del partido)
@@ -36,6 +44,12 @@ public class Asignacion {
 
     @Column(name = "monto", precision = 14, scale = 2, nullable = false)
     private BigDecimal monto = BigDecimal.ZERO;      
+
+    @Transient
+    private String estadoTraducido;
+
+    public String getEstadoTraducido() { return estadoTraducido; }
+    public void setEstadoTraducido(String estadoTraducido) { this.estadoTraducido = estadoTraducido; }
 
     public Asignacion() {}
 

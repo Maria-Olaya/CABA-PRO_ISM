@@ -4,6 +4,9 @@ public enum EstadoPartido {
     PROGRAMADO,
     EN_CURSO,
     FINALIZADO,
-    CANCELADO,
-   
+    CANCELADO;
+
+    public String getMensajeKey() {
+        return "partido.estado." + this.name().toLowerCase();
+    }
 }

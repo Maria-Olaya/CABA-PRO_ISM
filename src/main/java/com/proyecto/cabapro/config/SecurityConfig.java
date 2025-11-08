@@ -20,7 +20,7 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/registro", "/css/**", "/js/**","/images/**").permitAll()
+                .requestMatchers("/", "/login", "/registro", "/css/**", "/js/**","/images/**","/uploads/**","/noticias/api","/noticias/mock").permitAll()
                 .requestMatchers("/admin/**","/torneos/**","/partidos/**").hasRole("ADMIN")
                 .requestMatchers("/arbitro/**").hasRole("ARBITRO")
                 .anyRequest().authenticated()
