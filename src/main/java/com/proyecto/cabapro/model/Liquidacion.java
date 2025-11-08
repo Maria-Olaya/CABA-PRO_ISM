@@ -1,5 +1,9 @@
+// NUEVO - si
+
 package com.proyecto.cabapro.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.proyecto.cabapro.enums.EstadoLiquidacion;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -13,6 +17,7 @@ import java.time.LocalDateTime;
         columnNames = {"arbitro_id","firma"}
     )
 )
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Liquidacion {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +25,7 @@ public class Liquidacion {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "arbitro_id", nullable = false)
+    @JsonBackReference // 🔹 Rompe ciclo con Arbitro
     private Arbitro arbitro;
 
     @Column(name = "fecha_generada", nullable = false)

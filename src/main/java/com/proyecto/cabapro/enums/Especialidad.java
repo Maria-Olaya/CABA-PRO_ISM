@@ -1,9 +1,12 @@
+
+// MODIFICADO
+
 package com.proyecto.cabapro.enums;
 
 public enum Especialidad {
-    PRINCIPAL,       // Árbitro principal (en cancha)
-    AUXILIAR,        // Segundo árbitro (en cancha)
-    APUNTADOR,       // En mesa (anota)
-    CRONOMETRISTA;   // En mesa (tiempos)
+    PRINCIPAL, AUXILIAR, APUNTADOR, CRONOMETRISTA;
 
+    public String getMessageKey() {
+        return "especialidad." + this.name().toLowerCase();
+    }
 }

@@ -5,7 +5,6 @@ import com.proyecto.cabapro.enums.Especialidad;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
-
 import java.time.LocalDate;
 import java.util.*;
 
@@ -25,17 +24,20 @@ public class Arbitro extends Usuario {
     @NotNull(message = "El escalafón es obligatorio")
     private Escalafon escalafon;
 
-    // ---- Disponibilidad por FECHAS  ----
+    // ---- Disponibilidad por FECHAS ----
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
         name = "disponibilidades_fecha",
-        joinColumns = @JoinColumn(name = "arbitro_id", foreignKey = @ForeignKey(name = "FK_disponibilidades_fecha_arbitro"))
+        joinColumns = @JoinColumn(
+            name = "arbitro_id",
+            foreignKey = @ForeignKey(name = "FK_disponibilidades_fecha_arbitro")
+        )
     )
     @Column(name = "fecha")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Set<LocalDate> fechasDisponibles = new HashSet<>();
 
-    // ---- Relaciones  ----
+    // ---- Relaciones ----
     @OneToMany(mappedBy = "arbitro", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Asignacion> asignaciones = new ArrayList<>();
 
@@ -48,10 +50,19 @@ public class Arbitro extends Usuario {
     @ManyToMany(mappedBy = "arbitros", fetch = FetchType.LAZY)
     private List<Partido> partidos = new ArrayList<>();
 
-    public Arbitro() {}
+    public Arbitro() {
+    }
 
-    public Arbitro(String nombre, String apellido, String correo, String contrasena, String rol,
-                   String urlFoto, Especialidad especialidad, Escalafon escalafon) {
+    public Arbitro(
+        String nombre,
+        String apellido,
+        String correo,
+        String contrasena,
+        String rol,
+        String urlFoto,
+        Especialidad especialidad,
+        Escalafon escalafon
+    ) {
         super(nombre, apellido, correo, contrasena, rol);
         this.urlFoto = urlFoto;
         this.especialidad = especialidad;
@@ -59,27 +70,67 @@ public class Arbitro extends Usuario {
     }
 
     // Getters / Setters
-    public String getUrlFoto() { return urlFoto; }
-    public void setUrlFoto(String urlFoto) { this.urlFoto = urlFoto; }
+    public String getUrlFoto() {
+        return urlFoto;
+    }
 
-    public Especialidad getEspecialidad() { return especialidad; }
-    public void setEspecialidad(Especialidad especialidad) { this.especialidad = especialidad; }
+    public void setUrlFoto(String urlFoto) {
+        this.urlFoto = urlFoto;
+    }
 
-    public Escalafon getEscalafon() { return escalafon; }
-    public void setEscalafon(Escalafon escalafon) { this.escalafon = escalafon; }
+    public Especialidad getEspecialidad() {
+        return especialidad;
+    }
 
-    public Set<LocalDate> getFechasDisponibles() { return fechasDisponibles; }
-    public void setFechasDisponibles(Set<LocalDate> fechasDisponibles) { this.fechasDisponibles = fechasDisponibles; }
+    public void setEspecialidad(Especialidad especialidad) {
+        this.especialidad = especialidad;
+    }
 
-    public List<Asignacion> getAsignaciones() { return asignaciones; }
-    public void setAsignaciones(List<Asignacion> asignaciones) { this.asignaciones = asignaciones; }
+    public Escalafon getEscalafon() {
+        return escalafon;
+    }
 
-    public List<Tarifa> getTarifas() { return tarifas; }
-    public void setTarifas(List<Tarifa> tarifas) { this.tarifas = tarifas; }
+    public void setEscalafon(Escalafon escalafon) {
+        this.escalafon = escalafon;
+    }
 
-    public List<Liquidacion> getLiquidaciones() { return liquidaciones; }
-    public void setLiquidaciones(List<Liquidacion> liquidaciones) { this.liquidaciones = liquidaciones; }
+    public Set<LocalDate> getFechasDisponibles() {
+        return fechasDisponibles;
+    }
 
-    public List<Partido> getPartidos() { return partidos; }
-    public void setPartidos(List<Partido> partidos) { this.partidos = partidos; }
+    public void setFechasDisponibles(Set<LocalDate> fechasDisponibles) {
+        this.fechasDisponibles = fechasDisponibles;
+    }
+
+    public List<Asignacion> getAsignaciones() {
+        return asignaciones;
+    }
+
+    public void setAsignaciones(List<Asignacion> asignaciones) {
+        this.asignaciones = asignaciones;
+    }
+
+    public List<Tarifa> getTarifas() {
+        return tarifas;
+    }
+
+    public void setTarifas(List<Tarifa> tarifas) {
+        this.tarifas = tarifas;
+    }
+
+    public List<Liquidacion> getLiquidaciones() {
+        return liquidaciones;
+    }
+
+    public void setLiquidaciones(List<Liquidacion> liquidaciones) {
+        this.liquidaciones = liquidaciones;
+    }
+
+    public List<Partido> getPartidos() {
+        return partidos;
+    }
+
+    public void setPartidos(List<Partido> partidos) {
+        this.partidos = partidos;
+    }
 }

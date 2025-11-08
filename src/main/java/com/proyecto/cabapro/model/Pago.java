@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "pagos")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Pago {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,11 +1,17 @@
+// NUEVO - si
+
 package com.proyecto.cabapro.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.proyecto.cabapro.enums.EstadoPartido;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -18,10 +24,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "partidos")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Partido {
 
     @Id
@@ -39,6 +48,7 @@ public class Partido {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="torneo_id")
+    @JsonBackReference // 🔹 Rompe ciclo con Torneo
     private Torneo torneo;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -47,7 +57,20 @@ public class Partido {
         joinColumns = @JoinColumn(name = "partido_id"),
         inverseJoinColumns = @JoinColumn(name = "arbitro_id")
     )
+    @JsonIgnoreProperties("partidos") // 🔹 Evita recursión Partido↔Arbitro
     private List<Arbitro> arbitros = new ArrayList<>();
+
+    @OneToMany(mappedBy = "partido", cascade = CascadeType.ALL)
+    @JsonManagedReference  // 👉 indica el lado "padre"
+    private List<Asignacion> asignaciones;
+    
+    @Transient
+    private String estadoTraducido;
+
+    public String getEstadoTraducido() { return estadoTraducido; }
+    public void setEstadoTraducido(String estadoTraducido) { this.estadoTraducido = estadoTraducido; }
+
+
 
     // Getters y Setters
     public int getIdPartido() {
