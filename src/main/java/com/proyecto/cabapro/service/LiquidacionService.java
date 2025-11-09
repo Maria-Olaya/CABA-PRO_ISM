@@ -1,6 +1,6 @@
-
 package com.proyecto.cabapro.service;
 
+import java.util.Optional;  
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
@@ -75,8 +75,10 @@ public class LiquidacionService {
                         messageSource.getMessage("admin.arbitros.noEncontrado", null, locale)
                 ));
 
+    
         autoGenerarTarifasSiFaltan(a);
 
+     
         List<Tarifa> pendientes = tarifaRepo.findByArbitroAndLiquidacionIsNullOrderByGeneradoEnAsc(a);
         if (pendientes.isEmpty()) {
             throw new IllegalStateException(
@@ -144,7 +146,12 @@ public class LiquidacionService {
         return l.getPdf();
     }
 
-    // ==================== Helpers =====================
+    public Liquidacion buscarPorId(Long id) {
+
+        Optional<Liquidacion> liquidacion = liquidacionRepo.findById(id);
+        return liquidacion.orElse(null);
+    }
+
     private void autoGenerarTarifasSiFaltan(Arbitro a) {
         List<Partido> partidos = partidoRepo.findByArbitros_Id(a.getId());
         for (Partido p : partidos) {
@@ -181,14 +188,10 @@ public class LiquidacionService {
         }
     }
 
-    // ==================== PDF =====================
+ 
     private byte[] generarPdf(Arbitro a, List<Tarifa> filas, BigDecimal total) {
         Locale locale = LocaleContextHolder.getLocale();
-        if (locale == null) {
-            locale = Locale.getDefault(); 
-        }
-
-        System.out.println("🗣 Generando PDF en idioma: " + locale);
+        if (locale == null) locale = Locale.getDefault();
 
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             Document doc = new Document(PageSize.A4);
@@ -198,7 +201,6 @@ public class LiquidacionService {
             Font h1 = new Font(Font.HELVETICA, 16, Font.BOLD);
             Font normal = new Font(Font.HELVETICA, 10);
 
-            
             doc.add(new Paragraph(messageSource.getMessage("pdf.title", null, locale), h1));
             doc.add(new Paragraph(messageSource.getMessage("pdf.referee", null, locale) + ": "
                     + a.getNombre() + " " + a.getApellido(), normal));

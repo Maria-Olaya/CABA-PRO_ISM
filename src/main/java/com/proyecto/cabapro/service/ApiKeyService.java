@@ -21,7 +21,7 @@ public class ApiKeyService {
     }
 
     public Optional<ApiKey> findByKey(String key) {
-        // ✅ Si la clave es la maestra, devuelve un ApiKey simulado válido
+
         if (key != null && key.equals(masterKey)) {
             ApiKey apiKey = new ApiKey();
             apiKey.setOwnerApp("MASTER_KEY");

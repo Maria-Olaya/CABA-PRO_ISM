@@ -1,5 +1,3 @@
-// MODIFICADO 
-
 package com.proyecto.cabapro.enums;
 
 public enum EstadoLiquidacion {
