@@ -1,4 +1,3 @@
-// NUEVO - si - si 
 package com.proyecto.cabapro.rest;
 
 import com.proyecto.cabapro.model.Arbitro;
@@ -22,7 +21,7 @@ public class ArbitroRestController {
         this.arbitroService = arbitroService;
     }
 
-    // ================= VER PERFIL =================
+   
     @GetMapping("/perfil")
     public Map<String, Object> verPerfil(@AuthenticationPrincipal(expression = "username") String correo) {
         Arbitro arbitro = arbitroService.getActual(correo);
@@ -34,17 +33,16 @@ public class ArbitroRestController {
         );
     }
 
-    // ================= ACTUALIZAR PERFIL =================
+
     @PutMapping("/perfil")
     public Map<String, Object> actualizarPerfil(
         @AuthenticationPrincipal(expression = "username") String correo,
         @ModelAttribute Arbitro form
     ) {
         try {
-            // Actualizamos el perfil usando los tres parámetros que acepta el servicio
             arbitroService.actualizarPerfil(
                 correo,
-                form.getUrlFoto(),            // URL (puede ser vacía o default)
+                form.getUrlFoto(),           
                 form.getFechasDisponibles()
             );
 

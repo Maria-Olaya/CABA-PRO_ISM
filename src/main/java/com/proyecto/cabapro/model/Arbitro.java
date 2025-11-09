@@ -37,7 +37,6 @@ public class Arbitro extends Usuario {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Set<LocalDate> fechasDisponibles = new HashSet<>();
 
-    // ---- Relaciones ----
     @OneToMany(mappedBy = "arbitro", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Asignacion> asignaciones = new ArrayList<>();
 
@@ -49,6 +48,7 @@ public class Arbitro extends Usuario {
 
     @ManyToMany(mappedBy = "arbitros", fetch = FetchType.LAZY)
     private List<Partido> partidos = new ArrayList<>();
+
 
     public Arbitro() {
     }
@@ -69,7 +69,6 @@ public class Arbitro extends Usuario {
         this.escalafon = escalafon;
     }
 
-    // Getters / Setters
     public String getUrlFoto() {
         return urlFoto;
     }

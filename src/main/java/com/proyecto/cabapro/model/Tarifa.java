@@ -47,10 +47,10 @@ public class Tarifa {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "liquidacion_id")
-    @JsonIgnoreProperties("tarifas")
+    @JsonIgnoreProperties("tarifas") 
     private Liquidacion liquidacion;
 
-    // getters/setters...
+    // getters/setters
     public Long getId() { return id; }
     public Partido getPartido() { return partido; }
     public void setPartido(Partido partido) { this.partido = partido; }

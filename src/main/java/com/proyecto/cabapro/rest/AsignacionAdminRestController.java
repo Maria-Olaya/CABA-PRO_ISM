@@ -1,4 +1,3 @@
-// NUEVO - si
 package com.proyecto.cabapro.rest;
 
 import java.util.HashMap;
@@ -20,7 +19,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 @RestController
-@RequestMapping("/api/admin/asignaciones")//bien
+@RequestMapping("/api/admin/asignaciones")
 public class AsignacionAdminRestController {
 
     private final AsignacionService asignacionService;
@@ -29,12 +28,6 @@ public class AsignacionAdminRestController {
         this.asignacionService = asignacionService;
     }
 
-    /**
-     * Devuelve los datos necesarios para crear una asignación.
-     * Incluye árbitros disponibles, partido, y listas de apoyo.
-     */
-
-     // ================= OBTENER DATOS PARA CREAR ASIGNACIÓN =================
     @Operation(
         summary = "Obtener datos para crear una asignación",
         description = "Devuelve información del partido, árbitros disponibles, ya asignados y especialidades faltantes/ocupadas.",
@@ -74,12 +67,7 @@ public class AsignacionAdminRestController {
         return datos;
     }
 
-    /**
-     * Crea una nueva asignación para un partido dado.
-     */
 
-
-    // ================= CREAR ASIGNACIÓN =================
     @Operation(
         summary = "Crear asignación para un árbitro y partido",
         description = "Crea una nueva asignación y devuelve el ID de la asignación junto con el estado.",
@@ -104,7 +92,7 @@ public class AsignacionAdminRestController {
             )
         }
     )
-    @PostMapping("/uno")//???
+    @PostMapping("/uno")
     public Map<String, Object> crearAsignacion(
             @RequestParam("partidoId") int partidoId,
             @RequestParam("arbitroId") Integer arbitroId

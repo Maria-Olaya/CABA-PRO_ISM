@@ -1,4 +1,3 @@
-// NUEVO - si
 package com.proyecto.cabapro.rest;
 
 import java.util.List;
@@ -42,8 +41,7 @@ public class ArbitroAdminRestController {
         this.asignacionService = asignacionService;
     }
 
-    // ================= LISTAR TODOS =================
-    // ================= LISTAR TODOS =================
+
     @Operation(
         summary = "Listar todos los árbitros registrados",
         description = "Devuelve una lista completa con los árbitros del sistema, incluyendo su nombre, correo, especialidad y escalafón.",
@@ -86,7 +84,7 @@ public class ArbitroAdminRestController {
         return service.listar();
     }
 
-    // ================= BUSCAR POR ID =================
+ 
     @Operation(
         summary = "Obtener un árbitro por su ID",
         description = "Retorna los datos completos de un árbitro específico.",
@@ -127,7 +125,7 @@ public class ArbitroAdminRestController {
         return service.buscar(id);
     }
 
-    // ================= CREAR =================
+
     @Operation(
         summary = "Registrar un nuevo árbitro",
         description = "Permite crear un nuevo árbitro a partir de los datos enviados en formato JSON.",
@@ -175,9 +173,6 @@ public class ArbitroAdminRestController {
         return service.crear(arbitro);
     }
 
-
-    // ================= ACTUALIZAR =================
-    // ================= ACTUALIZAR =================
     @Operation(
         summary = "Actualizar los datos de un árbitro",
         description = "Permite modificar los datos personales o técnicos de un árbitro existente.",
@@ -221,7 +216,6 @@ public class ArbitroAdminRestController {
     }
 
 
-    // ================= ELIMINAR =================
     @Operation(
         summary = "Eliminar un árbitro del sistema",
         description = "Borra permanentemente el registro del árbitro identificado por su ID.",
@@ -243,7 +237,7 @@ public class ArbitroAdminRestController {
         service.eliminar(id);
     }
 
-    // ================= ASIGNACIONES DE UN ÁRBITRO =================
+
     @Operation(
         summary = "Listar las asignaciones de un árbitro",
         description = "Obtiene todos los partidos o torneos asignados a un árbitro específico.",

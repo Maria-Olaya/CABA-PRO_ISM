@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.proyecto.cabapro.enums.EstadoPartido;
@@ -39,14 +39,14 @@ public class Partido {
     private String lugar;
     @Enumerated(EnumType.STRING)
     @Column(name = "estado_partido")
-    private EstadoPartido estadoPartido = EstadoPartido.PROGRAMADO; 
+    private EstadoPartido estadoPartido = EstadoPartido.PROGRAMADO; // valor por defecto
 
     private String equipoLocal;
     private String equipoVisitante;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="torneo_id")
-    @JsonBackReference 
+    @JsonIgnore  
     private Torneo torneo;
 
     @ManyToMany(fetch = FetchType.LAZY)
