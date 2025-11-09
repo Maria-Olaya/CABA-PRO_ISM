@@ -50,7 +50,7 @@ public class AuthController {
                                 BindingResult result, Model model) {
         
         
-        // Validar coincidencia de contraseñas
+       
         if(!form.getContrasena().equals(form.getConfirmContrasena())) {
             result.rejectValue("confirmContrasena", "error.registerForm",
                 messageSource.getMessage("registro.error.contrasena_no_coincide", null, LocaleContextHolder.getLocale()));

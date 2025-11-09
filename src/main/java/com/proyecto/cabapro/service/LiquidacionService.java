@@ -1,5 +1,4 @@
 
-// MODIFICADO 
 package com.proyecto.cabapro.service;
 
 import com.lowagie.text.*;
@@ -68,7 +67,6 @@ public class LiquidacionService {
         return liquidacionRepo.findByArbitroOrderByFechaGeneradaDesc(a);
     }
 
-    /** Genera liquidación para todas las tarifas pendientes del árbitro. */
     public Liquidacion generarParaArbitro(Integer arbitroId) {
         Locale locale = LocaleContextHolder.getLocale();
 
@@ -77,10 +75,8 @@ public class LiquidacionService {
                         messageSource.getMessage("admin.arbitros.noEncontrado", null, locale)
                 ));
 
-        // Asegura tarifas solo para partidos elegibles
         autoGenerarTarifasSiFaltan(a);
 
-        // Toma pendientes (no liquidadas)
         List<Tarifa> pendientes = tarifaRepo.findByArbitroAndLiquidacionIsNullOrderByGeneradoEnAsc(a);
         if (pendientes.isEmpty()) {
             throw new IllegalStateException(
@@ -99,7 +95,6 @@ public class LiquidacionService {
                 .map(Tarifa::getMonto)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        // 🟢 CAMBIO: el PDF ahora detecta el idioma real, o usa fallback si aún no se estableció
         byte[] pdf = generarPdf(a, pendientes, total);
 
         Liquidacion liq = new Liquidacion();
@@ -111,7 +106,6 @@ public class LiquidacionService {
         liq.setPdf(pdf);
         liq = liquidacionRepo.save(liq);
 
-        // Marcar tarifas como liquidadas
         for (Tarifa t : pendientes) {
             t.setLiquidacion(liq);
         }
@@ -189,13 +183,11 @@ public class LiquidacionService {
 
     // ==================== PDF =====================
     private byte[] generarPdf(Arbitro a, List<Tarifa> filas, BigDecimal total) {
-        // 🟢 CAMBIO: Aseguramos que el locale no sea nulo
         Locale locale = LocaleContextHolder.getLocale();
         if (locale == null) {
-            locale = Locale.getDefault(); // 🟢 Fallback al idioma del sistema/navegador
+            locale = Locale.getDefault(); 
         }
 
-        // 🟢 CAMBIO (opcional): Log para verificar idioma detectado
         System.out.println("🗣 Generando PDF en idioma: " + locale);
 
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
@@ -206,7 +198,7 @@ public class LiquidacionService {
             Font h1 = new Font(Font.HELVETICA, 16, Font.BOLD);
             Font normal = new Font(Font.HELVETICA, 10);
 
-            // Encabezado traducido
+            
             doc.add(new Paragraph(messageSource.getMessage("pdf.title", null, locale), h1));
             doc.add(new Paragraph(messageSource.getMessage("pdf.referee", null, locale) + ": "
                     + a.getNombre() + " " + a.getApellido(), normal));
@@ -224,7 +216,6 @@ public class LiquidacionService {
             table.addCell(messageSource.getMessage("pdf.table.venue", null, locale));
             table.addCell(messageSource.getMessage("pdf.table.amount", null, locale));
 
-            // Filas dinámicas (no traducidas, vienen del contenido real)
             filas.forEach(t -> {
                 table.addCell(t.getPartido().getFecha().toString());
                 table.addCell(t.getTorneo().getNombre());

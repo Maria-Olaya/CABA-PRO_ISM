@@ -10,7 +10,6 @@ public interface LiquidacionRepository extends JpaRepository<Liquidacion, Long> 
     
     List<Liquidacion> findByArbitroOrderByFechaGeneradaDesc(Arbitro arbitro);
 
-    // Para detectar duplicados por "firma"
     boolean existsByArbitroAndFirma(Arbitro arbitro, String firma);
 }
 

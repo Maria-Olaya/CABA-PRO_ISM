@@ -1,5 +1,3 @@
-// MODIFICADO
-
 package com.proyecto.cabapro.service;
 
 import com.proyecto.cabapro.enums.CategoriaTorneo;
@@ -51,7 +49,7 @@ public class TarifaService {
 
     // ===== FACTOR por escalafón  =====
     public BigDecimal factorEscalafon(Escalafon esc) {
-        if (esc == null) return new BigDecimal("1.10"); // fallback suave
+        if (esc == null) return new BigDecimal("1.10"); 
         return switch (esc) {
             case INTERNACIONAL_FIBA   -> new BigDecimal("1.30");
             case PROFESIONAL_NACIONAL -> new BigDecimal("1.25");
@@ -61,14 +59,12 @@ public class TarifaService {
         };
     }
 
-    /** Total = base( categoría del torneo ) * factor( escalafón del árbitro ) */
     public BigDecimal totalPor(CategoriaTorneo categoria, Escalafon escalafon) {
         return baseCategoria(categoria)
                 .multiply(factorEscalafon(escalafon))
                 .setScale(2, RoundingMode.HALF_UP);
     }
 
-    /** Importe adicional por escalafón  */
     public BigDecimal adicionalEscalafon(CategoriaTorneo cat, Escalafon esc) {
         BigDecimal base = baseCategoria(cat);
         BigDecimal factor = factorEscalafon(esc);

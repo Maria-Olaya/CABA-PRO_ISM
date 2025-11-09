@@ -24,10 +24,10 @@ public class Usuario {
     private String contrasena;
     private String rol;
 
-    // Constructor vacío
+
     public Usuario() {}
 
-    // Constructor con parámetros
+  
     public Usuario(String nombre, String apellido, String correo, String contrasena, String rol) {
         this.nombre = nombre;
         this.apellido = apellido;

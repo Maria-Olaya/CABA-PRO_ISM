@@ -13,10 +13,10 @@ import com.proyecto.cabapro.service.NoticiasProvider;
 @Controller
 public class NewsViewController {
 
-    private final NoticiasProvider noticiasApi;   // implementacion real
-    private final NoticiasProvider noticiasMock;  // implementacion de prueba
+    private final NoticiasProvider noticiasApi;   
+    private final NoticiasProvider noticiasMock; 
 
-    // Inyectamos las implementaciones concretas usando @Qualifier
+    
     public NewsViewController(
             @Qualifier("noticiasApiProvider") NoticiasProvider noticiasApi,
             @Qualifier("noticiasMockProvider") NoticiasProvider noticiasMock) {
@@ -24,15 +24,14 @@ public class NewsViewController {
         this.noticiasMock = noticiasMock;
     }
 
-    // Mostrar noticias reales
+    
     @GetMapping("/noticias/api")
     public String showNewsApi(Model model) {
         List<NewsArticle> articles = noticiasApi.obtenerNoticias();
         model.addAttribute("articles", articles);
-        return "news"; // Thymeleaf buscará news.html
+        return "news"; 
     }
 
-    // Mostrar noticias mock
     @GetMapping("/noticias/mock")
     public String showNewsMock(Model model) {
         List<NewsArticle> articles = noticiasMock.obtenerNoticias();

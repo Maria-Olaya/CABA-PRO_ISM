@@ -44,7 +44,6 @@ public class PartidoService {
 
 
 
-    // Reemplaza este método con validación
     public Partido savePartido(Partido partido) {
         var torneo = partido.getTorneo();
         if (torneo == null) {
@@ -74,7 +73,7 @@ public class PartidoService {
         partido.setEquipoVisitante(form.getEquipoVisitante());
         partido.setEstadoPartido(EstadoPartido.PROGRAMADO);
         partido.setTorneo(torneo);
-        return savePartido(partido); // ya valida fechas
+        return savePartido(partido); 
     }
 
     public Partido actualizarPartido(Partido partido, PartidoForm form) {
@@ -99,8 +98,8 @@ public class PartidoService {
         List<Partido> partidos = partidoRepository.findByTorneo_IdTorneo(torneo.getIdTorneo());
 
         partidos.forEach(p -> {
-            actualizarEstado(p);        // mantiene tu lógica actual
-            traducirEstado(p);          // ahora separado
+            actualizarEstado(p);        
+            traducirEstado(p);         
         });
 
         return partidos;
@@ -160,13 +159,12 @@ public class PartidoService {
      */
   
 
-    // ---- Nuevo método ----
     public void actualizarEstado(Partido partido) {
         if (partido.getFecha() == null) return;
         if (partido.getEstadoPartido() == EstadoPartido.CANCELADO) return;
 
         LocalDateTime ahora = LocalDateTime.now();
-        long duracionMinutos = 10L; //  parametrizar
+        long duracionMinutos = 10L; 
 
         LocalDateTime inicio = partido.getFecha();
         LocalDateTime fin = inicio.plusMinutes(duracionMinutos);

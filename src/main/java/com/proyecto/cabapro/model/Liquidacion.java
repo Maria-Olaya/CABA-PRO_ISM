@@ -1,5 +1,3 @@
-// NUEVO - si
-
 package com.proyecto.cabapro.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -25,7 +23,7 @@ public class Liquidacion {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "arbitro_id", nullable = false)
-    @JsonBackReference // 🔹 Rompe ciclo con Arbitro
+    @JsonBackReference 
     private Arbitro arbitro;
 
     @Column(name = "fecha_generada", nullable = false)

@@ -47,7 +47,7 @@ public class AsignacionService {
 
     // ============== CREATE / UPDATE (dominio) ==============
 
-    /** Crear UNA asignación PENDIENTE (admin) */
+  
     public Asignacion crearParaArbitroYPartido(Integer arbitroId, int partidoId) {
         Arbitro a = buscarArbitroOrThrow(arbitroId);
         Partido p = buscarPartido(partidoId);
@@ -57,14 +57,13 @@ public class AsignacionService {
 
         Asignacion asg = asignacionRepo.save(construirPendiente(a, p));
 
-        // Hidratar traducción para UI / correo
+      
         traducirEstado(asg);
 
-        mailService.notificarNuevaAsignacion(asg);  // Se envía correo
+        mailService.notificarNuevaAsignacion(asg);  
         return asg;
     }
 
-    /** Transición: PENDIENTE -> ACEPTADA (desde el árbitro autenticado por correo) */
     public void aceptar(String correo, Long asignacionId) {
         Arbitro a = getArbitroActual(correo);
         Asignacion asig = asignacionRepo.findByIdAndArbitro(asignacionId, a)
@@ -76,7 +75,6 @@ public class AsignacionService {
         asig.setEstado(EstadoAsignacion.ACEPTADA);
         asignacionRepo.save(asig);
 
-        // Hidratar traducción tras el cambio de estado
         traducirEstado(asig);
 
         Partido p = asig.getPartido();
@@ -86,7 +84,6 @@ public class AsignacionService {
         }
     }
 
-    /** Transición: PENDIENTE -> RECHAZADA (desde el árbitro autenticado por correo) */
     public void rechazar(String correo, Long asignacionId) {
         Arbitro a = getArbitroActual(correo);
         Asignacion asig = asignacionRepo.findByIdAndArbitro(asignacionId, a)
@@ -98,7 +95,7 @@ public class AsignacionService {
         asig.setEstado(EstadoAsignacion.RECHAZADA);
         asignacionRepo.save(asig);
 
-        // Hidratar traducción tras el cambio de estado
+        
         traducirEstado(asig);
 
         Partido p = asig.getPartido();
@@ -254,14 +251,13 @@ public class AsignacionService {
                 && a.getEscalafon() != null) {
             monto = tarifaService.totalPor(p.getTorneo().getCategoria(), a.getEscalafon());
         }
-        asg.setMonto(monto); // valor "congelado"
-
-        // Hidratar traducción por consistencia
+        asg.setMonto(monto); 
+      
         traducirEstado(asg);
         return asg;
     }
 
-    /** Traduce una asignación (EstadoAsignacion -> estadoTraducido) */
+
     private void traducirEstado(Asignacion a) {
         if (a != null && a.getEstado() != null) {
             String txt = messageSource.getMessage(
@@ -273,7 +269,7 @@ public class AsignacionService {
         }
     }
 
-    /** Traduce en lote para listas */
+
     private void traducirEstados(List<Asignacion> lista) {
         if (lista != null) {
             lista.forEach(this::traducirEstado);

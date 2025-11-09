@@ -1,4 +1,3 @@
-// NUEVO - si
 package com.proyecto.cabapro.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -23,17 +22,17 @@ public class Tarifa {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "partido_id", nullable = false)
-    @JsonIgnoreProperties({"arbitros", "torneo"}) // ⚙️ Evita bucles Partido↔Arbitro↔Torneo
+    @JsonIgnoreProperties({"arbitros", "torneo"}) 
     private Partido partido;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "torneo_id", nullable = false)
-    @JsonIgnoreProperties("partidos") // ⚙️ Evita bucle con Torneo
+    @JsonIgnoreProperties("partidos") 
     private Torneo torneo;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "arbitro_id", nullable = false)
-    @JsonBackReference // 🔹 Rompe ciclo con Arbitro
+    @JsonBackReference 
     private Arbitro arbitro;
 
     @Enumerated(EnumType.STRING)
@@ -48,7 +47,7 @@ public class Tarifa {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "liquidacion_id")
-    @JsonIgnoreProperties("tarifas") // ⚙️ Evita recursión
+    @JsonIgnoreProperties("tarifas")
     private Liquidacion liquidacion;
 
     // getters/setters...

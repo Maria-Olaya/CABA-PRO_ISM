@@ -1,4 +1,3 @@
-// src/main/java/com/proyecto/cabapro/model/NewsArticle.java
 package com.proyecto.cabapro.model;
 
 public class NewsArticle {

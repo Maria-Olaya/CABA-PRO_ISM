@@ -23,7 +23,7 @@ public class AsignacionController {
         String correo = principal.getUsername();
         model.addAttribute("arbitro", asignacionService.getArbitroActual(correo));
         model.addAttribute("asignaciones", asignacionService.listarDelActual(correo));
-        return "arbitro/asignacion"; // templates/arbitro/asignacion.html
+        return "arbitro/asignacion"; 
     }
 
     @PostMapping("/{id}/aceptar")

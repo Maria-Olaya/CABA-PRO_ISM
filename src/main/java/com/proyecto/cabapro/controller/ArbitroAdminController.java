@@ -1,5 +1,3 @@
-// MODIFICADO 
-
 package com.proyecto.cabapro.controller;
 
 import com.proyecto.cabapro.controller.forms.ArbitroForm;
@@ -108,7 +106,7 @@ public class ArbitroAdminController {
         if (a == null) return "redirect:/admin/arbitros";
 
         ArbitroForm form = fromEntity(a);
-        form.setContrasena(""); // no exponer contraseña
+        form.setContrasena(""); 
 
         model.addAttribute("form", form);
         commonSelects(model);

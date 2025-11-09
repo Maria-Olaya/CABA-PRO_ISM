@@ -31,10 +31,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         return User.builder()
                 .username(usuario.getCorreo())
                 .password(usuario.getContrasena())
-                .roles(usuario.getRol().replace("ROLE_", "")) // quitar prefijo
+                .roles(usuario.getRol().replace("ROLE_", "")) 
                 .build();
     }
-        // Aquí el método de validación de correo
+        
     public boolean correoExiste(String correo) {
         return usuarioRepository.findByCorreo(correo).isPresent();
     }

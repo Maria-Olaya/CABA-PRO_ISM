@@ -18,17 +18,12 @@ public class AsignacionAdminController {
         this.asignacionService = asignacionService;
     }
 
-    /**
-     * Formulario de creación (requiere ?partidoId=...):
-     * - Lista árbitros
-     * - Carga partido
-     * - Pasa: no disponibles, ya asignados, aceptadas, faltantes, especialidades ocupadas
-     */
+
     @GetMapping
     public String form(@RequestParam("partidoId") int partidoId, Model model) {
         model.addAttribute("arbitros", asignacionService.listarArbitros());
 
-        Partido p = asignacionService.buscarPartido(partidoId); // lanza IllegalArgumentException si no existe
+        Partido p = asignacionService.buscarPartido(partidoId); 
         model.addAttribute("partido", p);
 
         model.addAttribute("noDispIds", asignacionService.arbitrosNoDisponiblesIds(partidoId));
@@ -37,17 +32,17 @@ public class AsignacionAdminController {
         model.addAttribute("faltanEsp", asignacionService.especialidadesFaltantes(partidoId));
         model.addAttribute("espOcupadas", asignacionService.especialidadesOcupadas(partidoId));
 
-        return "admin/asignacion/crearlo"; // templates/admin/asignacion/crearlo.html
+        return "admin/asignacion/crearlo"; 
     }
 
-    // Crear UNA asignación para el partido indicado.
+    
     @PostMapping("/uno")
     public String crearUna(@RequestParam("partidoId") int partidoId,
                            @RequestParam("arbitroId") Integer arbitroId,
                            RedirectAttributes ra) {
         try {
             Asignacion a = asignacionService.crearParaArbitroYPartido(arbitroId, partidoId);
-            // i18n por código + argumentos (se resuelve en la vista)
+         
             ra.addFlashAttribute("msgCode", "flash.asignacion.creada");
             ra.addFlashAttribute("msgArg0", a.getId());
         } catch (IllegalArgumentException ex) {

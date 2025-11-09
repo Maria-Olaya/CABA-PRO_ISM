@@ -18,17 +18,13 @@ public class PartidoScheduler {
         this.partidoService = partidoService;
     }
 
-    /**
-     * Corre cada minuto y actualiza el estado de todos los partidos.
-     * Cron: sec min hora día mes díaSemana
-     */
     @Transactional
-    @Scheduled(cron = "0 * * * * *") // cada minuto
+    @Scheduled(cron = "0 * * * * *") 
     public void actualizarEstadosPartidos() {
         List<Partido> partidos = partidoService.getAllPartidos();
         for (Partido partido : partidos) {
-            partidoService.actualizarEstado(partido); // actualizar estado
-            partidoService.savePartido(partido); // persistir cambio
+            partidoService.actualizarEstado(partido); 
+            partidoService.savePartido(partido); 
         }
         System.out.println("Scheduler ejecutado: estados de partidos actualizados.");
     }

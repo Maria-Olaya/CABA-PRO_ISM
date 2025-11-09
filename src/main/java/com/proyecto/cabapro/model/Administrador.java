@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "administrador")
-@PrimaryKeyJoinColumn(name = "id") // usa la misma PK del padre
+@PrimaryKeyJoinColumn(name = "id") 
 public class Administrador extends Usuario {
   
     public Administrador() {

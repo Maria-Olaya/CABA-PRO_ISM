@@ -1,4 +1,3 @@
-// NUEVO - si
 package com.proyecto.cabapro.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -18,25 +17,25 @@ public class Asignacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Árbitro dueño
+  
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "arbitro_id", nullable = false)
-    @JsonBackReference // 🔹 Rompe ciclo con Arbitro
+    @JsonBackReference 
     private Arbitro arbitro;
 
-    // Partido asignado (OBLIGATORIO)
+  
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "partido_id", nullable = false)
-    @JsonBackReference  // 👉 indica el lado "hijo", se ignora al serializar
+    @JsonBackReference  
     private Partido partido;
 
     // Torneo (se toma del partido)
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "torneo_id", nullable = false)
-    @JsonIgnoreProperties("partidos") // ⚙️ Torneo puede tener muchos partidos
+    @JsonIgnoreProperties("partidos") 
     private Torneo torneo;
 
-    // Fecha (copia de la fecha del partido)
+    
     private LocalDate fechaAsignacion;
 
     @Enumerated(EnumType.STRING)

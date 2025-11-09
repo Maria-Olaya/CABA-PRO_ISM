@@ -1,14 +1,11 @@
-
-// MODIFICADO 
-
 package com.proyecto.cabapro.controller;
 
 import com.proyecto.cabapro.model.Arbitro;
 import com.proyecto.cabapro.service.ArbitroService;
 import com.proyecto.cabapro.service.LiquidacionService;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.context.MessageSource; // 🔄 CAMBIO
-import org.springframework.context.i18n.LocaleContextHolder; // 🔄 CAMBIO
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder; 
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,14 +23,14 @@ public class LiquidacionAdminController {
 
     private final ArbitroService arbitroService;
     private final LiquidacionService liquidacionService;
-    private final MessageSource messageSource; // 🔄 CAMBIO
+    private final MessageSource messageSource; 
 
     public LiquidacionAdminController(ArbitroService arbitroService,
                                       LiquidacionService liquidacionService,
-                                      MessageSource messageSource) { // 🔄 CAMBIO
+                                      MessageSource messageSource) { 
         this.arbitroService = arbitroService;
         this.liquidacionService = liquidacionService;
-        this.messageSource = messageSource; // 🔄 CAMBIO
+        this.messageSource = messageSource; 
     }
 
     @GetMapping
@@ -57,18 +54,18 @@ public class LiquidacionAdminController {
 
     @PostMapping("/{arbitroId}/generar")
     public String generar(@PathVariable Integer arbitroId, RedirectAttributes ra) {
-        Locale locale = LocaleContextHolder.getLocale(); // 🔄 CAMBIO
+        Locale locale = LocaleContextHolder.getLocale(); 
         try {
             var liq = liquidacionService.generarParaArbitro(arbitroId);
             String msg = messageSource.getMessage("msg.liquidacionGenerada",
-                    new Object[]{liq.getId(), liq.getTotal()}, locale); // 🔄 CAMBIO
+                    new Object[]{liq.getId(), liq.getTotal()}, locale); 
             ra.addFlashAttribute("msg", msg);
         } catch (LiquidacionService.DuplicateLiquidacionException d) {
             ra.addFlashAttribute("err", d.getMessage());
         } catch (IllegalStateException e) {
             ra.addFlashAttribute("err", e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace(); // 👈 agrega esto temporalmente
+            e.printStackTrace(); 
             String msg = messageSource.getMessage("error.generico", new Object[]{e.getMessage()}, locale); // 🔄 CAMBIO
             ra.addFlashAttribute("err", msg);
         }
@@ -77,13 +74,13 @@ public class LiquidacionAdminController {
 
     @PostMapping("/{liqId}/pagar")
     public String pagar(@PathVariable Long liqId, @RequestParam Integer arbitroId, RedirectAttributes ra) {
-        Locale locale = LocaleContextHolder.getLocale(); // 🔄 CAMBIO
+        Locale locale = LocaleContextHolder.getLocale();
         try {
             liquidacionService.pagar(liqId);
-            String msg = messageSource.getMessage("msg.liquidacionPagada", new Object[]{liqId}, locale); // 🔄 CAMBIO
+            String msg = messageSource.getMessage("msg.liquidacionPagada", new Object[]{liqId}, locale); 
             ra.addFlashAttribute("msg", msg);
         } catch (Exception e) {
-            String msg = messageSource.getMessage("error.alPagar", new Object[]{e.getMessage()}, locale); // 🔄 CAMBIO
+            String msg = messageSource.getMessage("error.alPagar", new Object[]{e.getMessage()}, locale); 
             ra.addFlashAttribute("err", msg);
         }
         return "redirect:/admin/liquidaciones?arbitroId=" + arbitroId;

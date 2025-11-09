@@ -1,6 +1,4 @@
- // MODIFICADO 
-
- package com.proyecto.cabapro.controller;
+package com.proyecto.cabapro.controller;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -35,10 +33,8 @@ public class TarifaAdminController {
     private final PartidoService partidoService;
     private final TarifaService tarifaService;
 
-    // 🔹 [NUEVO] Se agrega el MessageSource para poder leer los mensajes desde messages.properties
     private final MessageSource messageSource;
 
-    // 🔹 [MODIFICADO] Constructor actualizado para incluir MessageSource
     @Autowired
     public TarifaAdminController(TorneoService torneoService,
                                  PartidoService partidoService,
@@ -47,11 +43,10 @@ public class TarifaAdminController {
         this.torneoService = torneoService;
         this.partidoService = partidoService;
         this.tarifaService = tarifaService;
-        this.messageSource = messageSource; // <-- [NUEVO]
+        this.messageSource = messageSource; 
     }
 
     @GetMapping("/asignar")
-    // 🔹 [MODIFICADO] Se agregó Locale como parámetro para detectar el idioma actual
     public String asignar(@RequestParam(required = false) Integer torneoId, Model model, Locale locale) {
         model.addAttribute("torneos", torneoService.listarTorneos());
 
@@ -61,7 +56,6 @@ public class TarifaAdminController {
 
         Torneo torneo = torneoService.obtenerPorId(torneoId);
         if (torneo == null) {
-            // 🔹 [CAMBIO PRINCIPAL] Texto fijo eliminado y reemplazado por el mensaje del archivo messages.properties
             String errorMsg = messageSource.getMessage("error.torneoNoEncontrado", null, locale);
             model.addAttribute("err", errorMsg);
             return "admin/tarifas/asignar";

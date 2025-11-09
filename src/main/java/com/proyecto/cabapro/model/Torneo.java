@@ -1,4 +1,3 @@
-// NUEVO - si
 package com.proyecto.cabapro.model;
 
 import java.time.LocalDateTime;
@@ -35,17 +34,17 @@ public class Torneo {
     @Enumerated(EnumType.STRING)
     private TipoTorneo tipoTorneo;
     
-    @Enumerated(EnumType.STRING) // <-- guarda el nombre del enum (no el número)
+    @Enumerated(EnumType.STRING) 
     private CategoriaTorneo categoria;
 
     private LocalDateTime fechaInicio;
     private LocalDateTime fechaFin;
 
-    @OneToMany(mappedBy = "torneo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)  // cargar partidos solo si los pides
-    @JsonManagedReference // 🔹 Maneja relación con Partido
+    @OneToMany(mappedBy = "torneo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)  
+    @JsonManagedReference 
     private List<Partido> partidos;
 
-        @Transient // No se guarda en la BD
+        @Transient 
         private String categoriaTraducida;
 
 
@@ -56,7 +55,7 @@ public class Torneo {
         public void setTipoTraducido(String tipoTraducido) { this.tipoTraducido = tipoTraducido; }
 
 
-        // GETTER Y SETTER
+       
         public String getCategoriaTraducida() {
             return categoriaTraducida;
         }

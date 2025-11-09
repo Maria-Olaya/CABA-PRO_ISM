@@ -52,7 +52,7 @@ public class ArbitroService {
     }
 
     public Arbitro crear(Arbitro a) {
-        // Reglas de negocio
+      
         if (a.getCorreo() == null || a.getCorreo().isBlank()) {
             throw new IllegalArgumentException("El correo es obligatorio");
         }
@@ -87,7 +87,7 @@ public class ArbitroService {
         actual.setApellido(datos.getApellido());
         actual.setCorreo(datos.getCorreo());
 
-        // Rol: mantener si no envían, y nunca dejar vacío
+        
         if (datos.getRol() != null && !datos.getRol().isBlank()) {
             actual.setRol(datos.getRol());
         }
@@ -95,7 +95,7 @@ public class ArbitroService {
             actual.setRol("ROLE_ARBITRO");
         }
 
-        // Contraseña solo si llega no vacía
+        
         if (datos.getContrasena() != null && !datos.getContrasena().isBlank()) {
             actual.setContrasena(encoder.encode(datos.getContrasena()));
         }

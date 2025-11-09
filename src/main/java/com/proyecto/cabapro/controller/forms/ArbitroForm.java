@@ -1,5 +1,3 @@
-// MODIFCADO 
-
 package com.proyecto.cabapro.controller.forms;
 import com.proyecto.cabapro.enums.Escalafon;
 import com.proyecto.cabapro.enums.Especialidad;

@@ -20,7 +20,6 @@ public class MailService {
         this.mailSender = mailSender;
     }
 
-    /** ÚNICO aviso: cuando se crea una asignación (estado PENDIENTE). */
 public void notificarNuevaAsignacion(Asignacion asg) {
     Arbitro a = asg.getArbitro();
     Partido p = asg.getPartido();

@@ -22,7 +22,7 @@ public class ArbitroController {
         this.arbitroService = arbitroService;
     }
 
-    // GET: muestra el formulario con los datos actuales y las fechas bloqueadas
+    
     @GetMapping
     public String verPerfil(
             @AuthenticationPrincipal(expression = "username") String correo,
@@ -30,16 +30,16 @@ public class ArbitroController {
     ) {
         Arbitro arbitro = arbitroService.getActual(correo);
 
-        // Fechas bloqueadas (asignaciones ACEPTADAS) para pintar en la vista
+        
         Set<LocalDate> bloqueadas = arbitroService.fechasBloqueadas(arbitro);
 
         model.addAttribute("arbitro", arbitro);
         model.addAttribute("bloqueadas", bloqueadas);
 
-        return "arbitro/perfil"; // templates/arbitro/perfil.html
+        return "arbitro/perfil"; 
     }
 
-    // POST: procesa el form y delega la actualización al Service
+    
     @PostMapping
     public String actualizarPerfil(
             @AuthenticationPrincipal(expression = "username") String correo,

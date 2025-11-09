@@ -40,27 +40,25 @@ public class TorneoController {
         this.partidoService = partidoService;
     }
 
-    // Mostrar lista de torneos
     @GetMapping
     public String listar(Model model) {
         model.addAttribute("torneos", torneoService.listarTorneos());
         return "torneos/lista";
     }
 
-    // Formulario de creación
+    
     @GetMapping("/nuevo")
     public String mostrarFormNuevo(Model model) {
         model.addAttribute("torneoForm", new TorneoForm());
         return "torneos/form";
     }
 
-    // Guardar torneo nuevo
     @PostMapping("/guardar")
     public String guardar(@Valid @ModelAttribute("torneoForm") TorneoForm torneoForm,
                           BindingResult result,
                           Model model) {
         if (result.hasErrors()) {
-            // Vuelve a pasar los enums al modelo
+            
             model.addAttribute("tiposTorneo", TipoTorneo.values());
             model.addAttribute("categoriasTorneo", CategoriaTorneo.values());
             return "torneos/form";
@@ -77,7 +75,7 @@ public class TorneoController {
         return "redirect:/torneos";
     }
 
-    // Mostrar formulario de edición
+    
     @GetMapping("/editar/{id}")
     public String mostrarFormEditar(@PathVariable("id") int id, Model model) {
         Torneo torneo = torneoService.obtenerPorId(id);
@@ -97,7 +95,6 @@ public class TorneoController {
         return "torneos/form";
     }
 
-    // Actualizar torneo existente
     @PostMapping("/actualizar/{id}")
     public String actualizar(@PathVariable("id") int id,
                              @Valid @ModelAttribute("torneoForm") TorneoForm torneoForm,
@@ -111,7 +108,6 @@ public class TorneoController {
 
         Torneo torneo = torneoService.obtenerPorId(id);
         if (torneo == null) {
-            // Si el torneo no existe, redirigir a la lista de torneos
             
             return "redirect:/torneos";
         }
@@ -126,7 +122,7 @@ public class TorneoController {
         return "redirect:/torneos";
     }
 
-    // Eliminar torneo
+    
     @GetMapping("/eliminar/{id}")
     public String eliminar(@PathVariable("id") int id) {
         torneoService.eliminarTorneo(id);
@@ -148,21 +144,20 @@ public class TorneoController {
             return "redirect:/torneos";
         }
 
-        // Aquí cargas los partidos asociados al torneo
         List<Partido> partidos = partidoService.obtenerPorTorneo(torneo);
         model.addAttribute("partidos", partidos);
 
 
         model.addAttribute("torneo", torneo);
         
-        return "torneos/detalle"; // vista donde muestras torneo + partidos
+        return "torneos/detalle"; 
     }
 
 
     @GetMapping("/{torneoId}/partidos/nuevo")
     public String mostrarFormNuevoPartido(@PathVariable int torneoId, Model model) {
         PartidoForm partidoForm = new PartidoForm();
-        partidoForm.setTorneoId(torneoId); // asigna el torneo
+        partidoForm.setTorneoId(torneoId); 
         model.addAttribute("partidoForm", partidoForm);
         return "partidos/form";
     }

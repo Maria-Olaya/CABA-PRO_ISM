@@ -18,7 +18,7 @@ import jakarta.validation.constraints.Size;
 
 public class TorneoForm {
 
-    private Integer idTorneo; // Usado para edición
+    private Integer idTorneo; 
 
     // --- NOMBRE ---
     @NotBlank(message = "{torneo.nombre.obligatorio}")
@@ -26,21 +26,21 @@ public class TorneoForm {
     @Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ0-9\\s]+$", message = "{torneo.nombre.pattern}")
     private String nombre;
 
-    // --- TIPO TORNEO ---
+    
     @NotNull(message = "{torneo.tipo.obligatorio}")
     private TipoTorneo tipoTorneo; 
 
-    // --- CATEGORÍA ---
+   
     @NotNull(message = "{torneo.categoria.obligatoria}")
     private CategoriaTorneo categoria;    
 
-    // --- FECHA INICIO ---
+   
     @NotNull(message = "{torneo.fechaInicio.obligatoria}")
     @FutureOrPresent(message = "{torneo.fechaInicio.futuro}")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime fechaInicio;
 
-    // --- FECHA FIN ---
+   
     @NotNull(message = "{torneo.fechaFin.obligatoria}")
     @Future(message = "{torneo.fechaFin.futuro}")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -50,10 +50,10 @@ public class TorneoForm {
 
     
 
-    // Validación personalizada
+  
     @AssertTrue(message = "La fecha de fin debe ser posterior al día de inicio (no se permiten eventos el mismo día)")
     public boolean isFechasValidas() {
-        if (fechaInicio == null || fechaFin == null) return true; // @NotNull lo maneja aparte
+        if (fechaInicio == null || fechaFin == null) return true; 
         return fechaFin.toLocalDate().isAfter(fechaInicio.toLocalDate());
     }
 

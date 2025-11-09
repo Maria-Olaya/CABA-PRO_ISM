@@ -1,5 +1,3 @@
-// NUEVO - si
-
 package com.proyecto.cabapro.model;
 
 import java.time.LocalDateTime;
@@ -41,14 +39,14 @@ public class Partido {
     private String lugar;
     @Enumerated(EnumType.STRING)
     @Column(name = "estado_partido")
-    private EstadoPartido estadoPartido = EstadoPartido.PROGRAMADO; // valor por defecto
+    private EstadoPartido estadoPartido = EstadoPartido.PROGRAMADO; 
 
     private String equipoLocal;
     private String equipoVisitante;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="torneo_id")
-    @JsonBackReference // 🔹 Rompe ciclo con Torneo
+    @JsonBackReference 
     private Torneo torneo;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -57,11 +55,11 @@ public class Partido {
         joinColumns = @JoinColumn(name = "partido_id"),
         inverseJoinColumns = @JoinColumn(name = "arbitro_id")
     )
-    @JsonIgnoreProperties("partidos") // 🔹 Evita recursión Partido↔Arbitro
+    @JsonIgnoreProperties("partidos") 
     private List<Arbitro> arbitros = new ArrayList<>();
 
     @OneToMany(mappedBy = "partido", cascade = CascadeType.ALL)
-    @JsonManagedReference  // 👉 indica el lado "padre"
+    @JsonManagedReference  
     private List<Asignacion> asignaciones;
     
     @Transient
