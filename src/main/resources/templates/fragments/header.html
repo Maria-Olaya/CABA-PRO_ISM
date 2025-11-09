@@ -1,66 +1,123 @@
-<header>
-  <div class="container py-3">
-    <a href="/"><img src="/images/logo-caba-pro.png" alt="CABA Pro" class="logo"></a>
+<header xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <div class="container py-3 d-flex align-items-center justify-content-between">
 
-    <nav class="d-none d-md-flex align-items-center">
-      <a href="/" class="nav-link-text">Inicio</a>
+    <!-- Logo -->
+    <a href="/">
+      <img src="/images/logo-caba-pro.png" alt="CABA Pro" class="logo">
+    </a>
 
-      <!-- Usuario NO autenticado -->
+    <!-- Navegación (desktop) -->
+    <nav class="d-none d-md-flex align-items-center gap-3">
+      <a href="/" th:text="#{header.inicio}" class="nav-link-text"></a>
+      <a href="/noticias/api" th:text="#{news.titulo}" class="nav-link-text"></a>
+
+      <!-- NO autenticado -->
       <div sec:authorize="isAnonymous()">
-        <a href="/login" class="nav-link-naranja">Iniciar Sesión</a>
+        <a href="/login" th:text="#{header.iniciarSesion}" class="nav-link-naranja"></a>
       </div>
 
-      <!-- Usuario autenticado -->
-      <div sec:authorize="isAuthenticated()">
-        <a sec:authorize="hasRole('ADMIN')" href="/admin/arbitros" class="nav-link-naranja">Dashboard</a>
-        <a sec:authorize="hasRole('ADMIN')" href="/admin/arbitros/nuevo" class="nav-link-naranja">Crear árbitro</a>
-        <a sec:authorize="hasRole('ADMIN')" href="/torneos" class="nav-link-naranja">Torneos</a>
-        <a sec:authorize="hasRole('ADMIN')" href="/admin/tarifas/asignar" class="nav-link-naranja">Visualizar tarifas</a>
-        <a sec:authorize="hasRole('ADMIN')" href="/admin/liquidaciones" class="nav-link-naranja">Generar liquidaciones</a>
+      <!-- Autenticado -->
+      <div sec:authorize="isAuthenticated()" class="d-flex align-items-center gap-3">
 
-        <a sec:authorize="hasRole('ARBITRO')" href="/arbitro/dashboard" class="nav-link-naranja">Dashboard</a>
-        <a sec:authorize="hasRole('ARBITRO')" href="/arbitro/edit" class="nav-link-naranja">Editar mi perfil</a>
-        <a sec:authorize="hasRole('ARBITRO')" href="/arbitro/asignaciones" class="nav-link-naranja">Mis asignaciones</a>
-        <a sec:authorize="hasRole('ARBITRO')" href="/arbitro/liquidaciones" class="nav-link-naranja">Mis liquidaciones</a>
-        
-        
-      
+        <!-- ADMIN -->
+        <div sec:authorize="hasRole('ADMIN')" class="d-flex align-items-center gap-3">
+          <a href="/admin/arbitros" th:text="#{header.dashboard}" class="nav-link-naranja"></a>
+          <a href="/admin/arbitros/nuevo" th:text="#{header.crearArbitro}" class="nav-link-naranja"></a>
+          <a href="/torneos" th:text="#{header.torneos}" class="nav-link-naranja"></a>
+          <a href="/admin/tarifas/asignar" th:text="#{header.visualizarTarifas}" class="nav-link-naranja"></a>
+          <a href="/admin/liquidaciones" th:text="#{header.generarLiquidaciones}" class="nav-link-naranja"></a>
+        </div>
 
+        <!-- ARBITRO -->
+        <div sec:authorize="hasRole('ARBITRO')" class="d-flex align-items-center gap-3">
+          <a href="/arbitro/dashboard" th:text="#{header.dashboard}" class="nav-link-naranja"></a>
+          <a href="/arbitro/edit" th:text="#{header.editarPerfil}" class="nav-link-naranja"></a>
+          <a href="/arbitro/asignaciones" th:text="#{header.misAsignaciones}" class="nav-link-naranja"></a>
+          <a href="/arbitro/liquidaciones" th:text="#{header.misLiquidaciones}" class="nav-link-naranja"></a>
+        </div>
 
-        <a sec:authorize="!hasRole('ADMIN') and !hasRole('ARBITRO')" href="/" class="nav-link-naranja">Dashboard</a>
+        <!-- Cualquier otro rol -->
+        <a sec:authorize="!hasRole('ADMIN') and !hasRole('ARBITRO')"
+           href="/" th:text="#{header.dashboard}" class="nav-link-naranja"></a>
 
+        <!-- Logout -->
         <form th:action="@{/logout}" method="post" style="display:inline">
-          <button type="submit" class="nav-link-naranja" style="background:none; border:none; padding:0; cursor:pointer;">Cerrar Sesión</button>
+          <button type="submit"
+                  th:text="#{header.cerrarSesion}"
+                  class="nav-link-naranja"
+                  style="background:none; border:none; padding:0; cursor:pointer;"></button>
         </form>
       </div>
     </nav>
 
+    <!-- Selector de idioma (DESKTOP) SIEMPRE visible -->
+    <form method="get" th:action="@{''}" class="d-none d-md-block ms-3">
+      <select name="lang"
+              onchange="this.form.submit()"
+              class="form-select form-select-sm"
+              style="width:auto; display:inline-block;">
+        <option value="es" th:selected="${#locale.language == 'es'}">ES</option>
+        <option value="en" th:selected="${#locale.language == 'en'}">EN</option>
+      </select>
+
+      <!-- Ejemplo de preservación de parámetros si aplica -->
+      <input type="hidden" name="partidoId"
+             th:if="${param.partidoId != null}"
+             th:value="${param.partidoId}"/>
+    </form>
+
+    <!-- Botón menú móvil -->
     <div class="d-md-none">
       <button class="btn btn-sm btn-outline-secondary" type="button"
-        onclick="document.querySelector('.mobile-menu').classList.toggle('d-none')">☰</button>
+              onclick="document.querySelector('.mobile-menu').classList.toggle('d-none')">
+        ☰
+      </button>
     </div>
   </div>
 
+  <!-- Menú móvil -->
   <div class="mobile-menu d-none bg-white border-top">
     <div class="p-3">
-      <a href="/" class="nav-link-text d-block mb-2">Inicio</a>
+      <a href="/" th:text="#{header.inicio}" class="nav-link-text d-block mb-2"></a>
 
-      <!-- Usuario NO autenticado -->
-      <div sec:authorize="isAnonymous()" class="mt-2">
-        <a href="/login" class="nav-link-naranja d-block mb-2">Iniciar Sesión</a>
-        <a href="/registro" class="nav-link-verde d-block">Registrarse</a>
-      </div>
-
-      <!-- Usuario autenticado -->
       <div sec:authorize="isAuthenticated()" class="mt-2">
-        <a sec:authorize="hasRole('ADMIN')" href="/admin/arbitros" class="nav-link-naranja d-block mb-2">Dashboard</a>
-        <a sec:authorize="hasRole('ARBITRO')" href="/arbitro/dashboard" class="nav-link-naranja d-block mb-2">Dashboard</a>
-        <a sec:authorize="!hasRole('ADMIN') and !hasRole('ARBITRO')" href="/" class="nav-link-naranja d-block mb-2">Dashboard</a>
+        <div sec:authorize="hasRole('ADMIN')" class="mb-2">
+          <a href="/admin/arbitros" th:text="#{header.dashboard}" class="nav-link-naranja d-block mb-2"></a>
+          <a href="/admin/arbitros/nuevo" th:text="#{header.crearArbitro}" class="nav-link-naranja d-block mb-2"></a>
+          <a href="/torneos" th:text="#{header.torneos}" class="nav-link-naranja d-block mb-2"></a>
+          <a href="/admin/tarifas/asignar" th:text="#{header.visualizarTarifas}" class="nav-link-naranja d-block mb-2"></a>
+          <a href="/admin/liquidaciones" th:text="#{header.generarLiquidaciones}" class="nav-link-naranja d-block mb-2"></a>
+        </div>
 
-        <form th:action="@{/logout}" method="post">
-          <button type="submit" class="nav-link-naranja d-block" style="background:none; border:none; padding:0; cursor:pointer;">Cerrar Sesión</button>
+        <div sec:authorize="hasRole('ARBITRO')" class="mb-2">
+          <a href="/arbitro/dashboard" th:text="#{header.dashboard}" class="nav-link-naranja d-block mb-2"></a>
+          <a href="/arbitro/edit" th:text="#{header.editarPerfil}" class="nav-link-naranja d-block mb-2"></a>
+          <a href="/arbitro/asignaciones" th:text="#{header.misAsignaciones}" class="nav-link-naranja d-block mb-2"></a>
+          <a href="/arbitro/liquidaciones" th:text="#{header.misLiquidaciones}" class="nav-link-naranja d-block mb-2"></a>
+        </div>
+
+        <form th:action="@{/logout}" method="post" class="mb-3">
+          <button type="submit" th:text="#{header.cerrarSesion}" class="nav-link-naranja d-block"
+                  style="background:none; border:none; padding:0; cursor:pointer;"></button>
         </form>
       </div>
+
+      <!-- NO autenticado (móvil) -->
+      <div sec:authorize="isAnonymous()" class="mt-2">
+        <a href="/login" th:text="#{header.iniciarSesion}" class="nav-link-naranja d-block mb-2"></a>
+      </div>
+
+      <!-- Selector de idioma (MÓVIL) SIEMPRE visible -->
+      <form method="get" th:action="@{''}">
+        <select name="lang" onchange="this.form.submit()" class="form-select form-select-sm" style="width:auto;">
+          <option value="es" th:selected="${#locale.language == 'es'}">ES</option>
+          <option value="en" th:selected="${#locale.language == 'en'}">EN</option>
+        </select>
+        <input type="hidden" name="partidoId"
+               th:if="${param.partidoId != null}"
+               th:value="${param.partidoId}"/>
+      </form>
+
     </div>
   </div>
 </header>

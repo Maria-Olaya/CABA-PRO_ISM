@@ -3,7 +3,7 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>CABA Pro - Lista de Torneos</title>
+  <title th:text="#{torneo.listaTitulo}"></title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Bootstrap -->
@@ -23,9 +23,10 @@
   <!-- CONTENIDO -->
   <main class="container my-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h1 class="fw-bold">Lista de Torneos</h1>
+      <h1 class="fw-bold" th:text="#{torneo.listaTitulo}"></h1>
         <a th:href="@{/torneos/nuevo}" class="btn btn-caba-verde">
-            <i class="bi bi-plus-circle"></i> Crear nuevo torneo
+            <i class="bi bi-plus-circle"></i> <span th:text="#{torneo.crear}"></span>
+
         </a>
 
     </div>
@@ -34,41 +35,43 @@
       <table class="table table-striped table-hover align-middle shadow-sm bg-white rounded">
         <thead class="table-success">
           <tr>
-            <th>ID</th>
-            <th>Tipo</th>
-            <th>Categoría</th>
-            <th>Inicio</th>
-            <th>Fin</th>
-            <th class="text-center">Acciones</th>
+           <th th:text="#{torneo.id}"></th>
+            <th th:text="#{torneo.tipo}"></th>
+            <th th:text="#{torneo.categoria}"></th>
+            <th th:text="#{torneo.inicio}"></th>
+            <th th:text="#{torneo.fin}"></th>
+            <th th:text="#{torneo.acciones}"></th>
           </tr>
         </thead>
         <tbody>
           <tr th:each="torneo : ${torneos}">
             <td th:text="${torneo.idTorneo}"></td>
-            <td th:text="${torneo.tipoTorneo}"></td>
-            <td th:text="${torneo.categoria}"></td>
+            <td th:text="${torneo.tipoTraducido}"></td>
+
+
+            <td th:text="${torneo.categoriaTraducida}"></td>
             <td th:text="${torneo.fechaInicio}"></td>
             <td th:text="${torneo.fechaFin}"></td>
             <td class="text-center">
                 <!-- Ver (verde identidad) -->
-                <a th:href="@{'/torneos/' + ${torneo.idTorneo}}" 
-                    class="btn btn-sm btn-caba-verde" 
-                    title="Ver">
-                    <i class="bi bi-eye"></i>
+                <a th:href="@{'/torneos/' + ${torneo.idTorneo}}"
+                  th:title="#{boton.ver}"
+                  class="btn btn-sm btn-caba-verde">
+                  <i class="bi bi-eye"></i>
                 </a>
 
                 <!-- Editar (naranja identidad) -->
                 <a th:href="@{'/torneos/editar/' + ${torneo.idTorneo}}" 
-                    class="btn btn-sm btn-caba-naranja" 
-                    title="Editar">
+                    th:title="#{boton.editar}"
+                    class="btn btn-sm btn-caba-naranja" >
                     <i class="bi bi-pencil-square"></i>
                 </a>
 
                 <!-- Eliminar (rojo derivado) -->
                 <a th:href="@{'/torneos/eliminar/' + ${torneo.idTorneo}}"
+                    th:title="#{boton.eliminar}"
                     onclick="return confirm('¿Estás seguro de eliminar este torneo?');"
-                    class="btn btn-sm btn-caba-peligro" 
-                    title="Eliminar">
+                    class="btn btn-sm btn-caba-peligro" >
                     <i class="bi bi-trash"></i>
                 </a>
             </td>
