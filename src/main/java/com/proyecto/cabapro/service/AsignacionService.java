@@ -10,6 +10,9 @@ import com.proyecto.cabapro.repository.PartidoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
@@ -24,18 +27,21 @@ public class AsignacionService {
     private final ArbitroService arbitroService;
     private final MailService mailService;
     private final TarifaService tarifaService;
+    private final MessageSource messageSource;
 
     public AsignacionService(
             AsignacionRepository asignacionRepo,
             PartidoRepository partidoRepo,
             ArbitroService arbitroService,
             MailService mailService,
-            TarifaService tarifaService
+            TarifaService tarifaService,
+            MessageSource messageSource
     ) {
         this.asignacionRepo = asignacionRepo;
         this.partidoRepo = partidoRepo;
         this.arbitroService = arbitroService;
         this.tarifaService = tarifaService;
+        this.messageSource = messageSource;
         this.mailService = mailService;
     }
 
@@ -50,6 +56,10 @@ public class AsignacionService {
         validarPrecondicionesDeAsignacion(a, p, f);
 
         Asignacion asg = asignacionRepo.save(construirPendiente(a, p));
+
+        // Hidratar traducción para UI / correo
+        traducirEstado(asg);
+
         mailService.notificarNuevaAsignacion(asg);  // Se envía correo
         return asg;
     }
@@ -65,6 +75,9 @@ public class AsignacionService {
 
         asig.setEstado(EstadoAsignacion.ACEPTADA);
         asignacionRepo.save(asig);
+
+        // Hidratar traducción tras el cambio de estado
+        traducirEstado(asig);
 
         Partido p = asig.getPartido();
         if (p.getArbitros().stream().noneMatch(x -> Objects.equals(x.getId(), a.getId()))) {
@@ -85,6 +98,9 @@ public class AsignacionService {
         asig.setEstado(EstadoAsignacion.RECHAZADA);
         asignacionRepo.save(asig);
 
+        // Hidratar traducción tras el cambio de estado
+        traducirEstado(asig);
+
         Partido p = asig.getPartido();
         p.getArbitros().removeIf(x -> Objects.equals(x.getId(), a.getId()));
         partidoRepo.save(p);
@@ -94,20 +110,26 @@ public class AsignacionService {
     @Transactional(readOnly = true)
     public List<Asignacion> listarDelActual(String correo) {
         Arbitro a = getArbitroActual(correo);
-        return asignacionRepo.findByArbitroOrderByFechaAsignacionDesc(a);
+        List<Asignacion> lista = asignacionRepo.findByArbitroOrderByFechaAsignacionDesc(a);
+        traducirEstados(lista);
+        return lista;
     }
 
     @Transactional(readOnly = true)
     public List<Asignacion> listarAceptadasPorPartido(int partidoId) {
         Partido p = buscarPartido(partidoId);
-        return asignacionRepo.findByPartidoAndEstado(p, EstadoAsignacion.ACEPTADA);
+        List<Asignacion> lista = asignacionRepo.findByPartidoAndEstado(p, EstadoAsignacion.ACEPTADA);
+        traducirEstados(lista);
+        return lista;
     }
 
     @Transactional(readOnly = true)
     public List<Asignacion> listarPorArbitroId(Integer arbitroId) {
         Arbitro a = arbitroService.buscar(arbitroId);
         if (a == null) throw new IllegalArgumentException("Árbitro no encontrado.");
-        return asignacionRepo.findByArbitroOrderByFechaAsignacionDesc(a);
+        List<Asignacion> lista = asignacionRepo.findByArbitroOrderByFechaAsignacionDesc(a);
+        traducirEstados(lista);
+        return lista;
     }
 
     // ======= Soporte a vistas / consultas de dominio =======
@@ -233,7 +255,28 @@ public class AsignacionService {
             monto = tarifaService.totalPor(p.getTorneo().getCategoria(), a.getEscalafon());
         }
         asg.setMonto(monto); // valor "congelado"
-        return asg;
 
+        // Hidratar traducción por consistencia
+        traducirEstado(asg);
+        return asg;
+    }
+
+    /** Traduce una asignación (EstadoAsignacion -> estadoTraducido) */
+    private void traducirEstado(Asignacion a) {
+        if (a != null && a.getEstado() != null) {
+            String txt = messageSource.getMessage(
+                    a.getEstado().getMensajeKey(),
+                    null,
+                    LocaleContextHolder.getLocale()
+            );
+            a.setEstadoTraducido(txt);
+        }
+    }
+
+    /** Traduce en lote para listas */
+    private void traducirEstados(List<Asignacion> lista) {
+        if (lista != null) {
+            lista.forEach(this::traducirEstado);
+        }
     }
 }

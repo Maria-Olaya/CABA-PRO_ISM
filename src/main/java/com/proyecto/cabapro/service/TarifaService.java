@@ -1,3 +1,5 @@
+// MODIFICADO
+
 package com.proyecto.cabapro.service;
 
 import com.proyecto.cabapro.enums.CategoriaTorneo;
@@ -8,12 +10,15 @@ import com.proyecto.cabapro.model.Partido;
 import com.proyecto.cabapro.model.Tarifa;
 import com.proyecto.cabapro.model.Torneo;
 import com.proyecto.cabapro.repository.TarifaRepository;
+import org.springframework.context.MessageSource; 
+import org.springframework.context.i18n.LocaleContextHolder; 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @Transactional
@@ -22,13 +27,16 @@ public class TarifaService {
     private final TarifaRepository tarifaRepo;
     private final TorneoService torneoService;
     private final PartidoService partidoService;
+    private final MessageSource messageSource; 
 
     public TarifaService(TarifaRepository tarifaRepo,
                          TorneoService torneoService,
-                         PartidoService partidoService) {
+                         PartidoService partidoService,
+                         MessageSource messageSource) { 
         this.tarifaRepo = tarifaRepo;
         this.torneoService = torneoService;
         this.partidoService = partidoService;
+        this.messageSource = messageSource; 
     }
 
     // ===== BASE por categoría (VALOR DEL PARTIDO) =====
@@ -68,12 +76,10 @@ public class TarifaService {
                    .setScale(2, RoundingMode.HALF_UP);
     }
 
-
     private boolean debeGenerarseTarifa(Partido p, Arbitro a) {
         if (p == null || a == null) return false;
         if (p.getTorneo() == null) return false;
         if (a.getEscalafon() == null) return false;
-  
         return p.getEstadoPartido() == EstadoPartido.FINALIZADO;
     }
 
@@ -107,15 +113,19 @@ public class TarifaService {
                 });
     }
 
-
     public void generarAutomaticoParaTorneo(int torneoId) {
         Torneo torneo = torneoService.obtenerPorId(torneoId);
-        if (torneo == null) throw new IllegalArgumentException("Torneo no encontrado.");
+        if (torneo == null) {
+          
+            Locale locale = LocaleContextHolder.getLocale();
+            String msg = messageSource.getMessage("error.torneoNoEncontrado", null, locale);
+            throw new IllegalArgumentException(msg);
+        }
 
         List<Partido> partidos = partidoService.getPartidosByTorneo(torneoId);
         for (Partido p : partidos) {
             for (Arbitro a : p.getArbitros()) {
-                ensureTarifaIfEligible(p, a); 
+                ensureTarifaIfEligible(p, a);
             }
         }
     }

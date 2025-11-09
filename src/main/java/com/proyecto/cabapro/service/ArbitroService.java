@@ -19,12 +19,17 @@ import java.util.stream.Collectors;
 @Transactional
 public class ArbitroService {
 
-    // ===== Excepciones  =====
+    // ===== Excepciones =====
     public static class DuplicateEmailException extends RuntimeException {
-        public DuplicateEmailException(String message) { super(message); }
+        public DuplicateEmailException(String message) {
+            super(message);
+        }
     }
+
     public static class PasswordRequiredOnCreateException extends RuntimeException {
-        public PasswordRequiredOnCreateException(String message) { super(message); }
+        public PasswordRequiredOnCreateException(String message) {
+            super(message);
+        }
     }
 
     private final ArbitroRepository arbitroRepo;
@@ -33,7 +38,7 @@ public class ArbitroService {
 
     public ArbitroService(ArbitroRepository arbitroRepo, AsignacionRepository asignacionRepo) {
         this.arbitroRepo = arbitroRepo;
-        this.asignacionRepo= asignacionRepo;
+        this.asignacionRepo = asignacionRepo;
     }
 
     // =============== (DESDE ADMIN) ===============
@@ -58,7 +63,6 @@ public class ArbitroService {
             throw new PasswordRequiredOnCreateException("La contraseña es obligatoria al crear el árbitro");
         }
 
-       
         a.setContrasena(encoder.encode(a.getContrasena()));
         if (a.getRol() == null || a.getRol().isBlank()) {
             a.setRol("ROLE_ARBITRO");
@@ -70,7 +74,6 @@ public class ArbitroService {
         Arbitro actual = buscar(id);
         if (actual == null) return null;
 
-        
         if (datos.getCorreo() == null || datos.getCorreo().isBlank()) {
             throw new IllegalArgumentException("El correo es obligatorio");
         }
@@ -80,7 +83,6 @@ public class ArbitroService {
             }
         }
 
-        
         actual.setNombre(datos.getNombre());
         actual.setApellido(datos.getApellido());
         actual.setCorreo(datos.getCorreo());
@@ -98,7 +100,6 @@ public class ArbitroService {
             actual.setContrasena(encoder.encode(datos.getContrasena()));
         }
 
-       
         actual.setUrlFoto(datos.getUrlFoto());
         actual.setEspecialidad(datos.getEspecialidad());
         actual.setEscalafon(datos.getEscalafon());
@@ -118,7 +119,7 @@ public class ArbitroService {
         }
     }
 
-     // =============== PERFIL (ÁRBITRO) ===============
+    // =============== PERFIL (ÁRBITRO) ===============
 
     public Arbitro getActual(String correo) {
         return arbitroRepo.findByCorreo(correo)
@@ -148,5 +149,4 @@ public class ArbitroService {
                 .map(Asignacion::getFechaAsignacion)
                 .collect(Collectors.toSet());
     }
-
 }
