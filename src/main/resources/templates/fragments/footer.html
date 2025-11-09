@@ -7,28 +7,27 @@
     <div style="max-width:360px">
       <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;">
         <img src="/images/logo-caba-pro.png" alt="logo" style="height:36px">
-        <strong>CABA Pro</strong>
+        <strong th:text="#{name}" > </strong>
       </div>
-      <p style="color:rgba(255,255,255,0.8);font-size:.95rem;margin:0">
-        Plataforma líder para la gestión profesional de arbitraje deportivo. Eficiencia, confiabilidad y simplicidad.
-      </p>
+       <p class="footer-desc" th:text="#{footer.descripcion}"></p>
     </div>
 
     <div class="d-flex gap-5 mt-4 mt-md-0">
       <div>
-        <h6 style="color:#f9f9f9">Plataforma</h6>
-        <ul style="list-style:none;padding:0;margin:8px 0 0;">
-          <li><a href="#">Características</a></li>
-          <li><a href="#">Para Árbitros</a></li>
-          <li><a href="#">Para Administradores</a></li>
+        <h6 th:text="#{footer.plataforma}"></h6>
+
+        <ul class="list-unstyled mt-2">
+          <li><a href="#" th:text="#{footer.caracteristicas}"></a></li>
+          <li><a href="#" th:text="#{footer.paraArbitros}"></a></li>
+          <li><a href="#" th:text="#{footer.paraAdministradores}"></a></li>
         </ul>
       </div>
       <div>
-        <h6 style="color:#f9f9f9">Soporte</h6>
-        <ul style="list-style:none;padding:0;margin:8px 0 0;">
-          <li><a href="#">Centro de Ayuda</a></li>
-          <li><a href="#">Contacto</a></li>
-          <li><a href="#">Documentación</a></li>
+        <h6 th:text="#{footer.soporte}"></h6>
+        <ul class="list-unstyled mt-2">
+          <li><a href="#" th:text="#{footer.centroAyuda}"></a></li>
+          <li><a href="#" th:text="#{footer.contacto}"></a></li>
+          <li><a href="#" th:text="#{footer.documentacion}"></a></li>
         </ul>
       </div>
     </div>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Registro</title>
+  <title th:text="#{registro.titulo}"></title>
 
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -24,46 +24,72 @@
     <div class="row justify-content-center">
       <div class="col-md-6 col-lg-4">
         <div class="card p-4 shadow-sm rounded-3">
-          <h2 class="mb-4 text-center">Registro</h2>
+          <h2 class="mb-4 text-center" th:text="#{registro.titulo}"></h2>
 
-          <form method="post" th:action="@{/registro}" th:object="${registerForm}" class="needs-validation">
+
+          <div th:if="${mensajeExito}" class="alert alert-success" th:text="${mensajeExito}"></div>
+
+          <form method="post" th:action="@{/registro}" th:object="${registerForm}" class="needs-validation" novalidate>
 
 
             <!-- Nombre -->
             <div class="mb-3">
-              <label class="form-label">Nombre</label>
-              <input type="text" th:field="*{nombre}" placeholder="Nombre" class="form-control" required/>
+              <label class="form-label" th:text="#{registro.nombre}"></label>
+              <input type="text" th:field="*{nombre}" th:placeholder="#{registro.nombre.placeholder}" class="form-control"/>
+
               <div class="text-danger small" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
             </div>
 
             <!-- Apellido -->
             <div class="mb-3">
-              <label class="form-label">Apellido</label>
-              <input type="text" th:field="*{apellido}" placeholder="Apellido" class="form-control" required/>
+              <label class="form-label" th:text="#{registro.apellido}"></label>
+              <input type="text" th:field="*{apellido}" th:placeholder="#{registro.apellido.placeholder}" class="form-control"/>
+
+                     
               <div class="text-danger small" th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></div>
             </div>
 
             <!-- Correo -->
             <div class="mb-3">
-              <label class="form-label">Correo</label>
-              <input type="email" th:field="*{correo}" placeholder="Correo" class="form-control" required/>
+              <label class="form-label" th:text="#{registro.correo}"></label>
+              <input type="email" th:field="*{correo}" th:placeholder="#{registro.correo.placeholder}" class="form-control"/>
+
               <div class="text-danger small" th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"></div>
             </div>
 
             <!-- Contraseña -->
             <div class="mb-3">
-              <label class="form-label">Contraseña</label>
-              <input type="password" th:field="*{contrasena}" placeholder="Contraseña" class="form-control" required/>
+              <label class="form-label" th:text="#{registro.contrasena}"></label>
+              <input type="password" th:field="*{contrasena}" th:placeholder="#{registro.contrasena.placeholder}" class="form-control"/>
+
+
+
               <div class="text-danger small" th:if="${#fields.hasErrors('contrasena')}" th:errors="*{contrasena}"></div>
             </div>
+
+            <!-- Confirmar contraseña -->
+            <div class="mb-3">
+              <label class="form-label" th:text="#{registro.confirmarContrasena}"></label>
+              <input type="password" th:field="*{confirmContrasena}" th:placeholder="#{registro.confirmarContrasena.placeholder}" class="form-control"/>
+
+                      
+              <div class="text-danger small" th:if="${#fields.hasErrors('confirmContrasena')}" th:errors="*{confirmContrasena}"></div>
+            </div>
+
 
 
 
             <!-- Botón registrarse -->
             <div class="d-grid mt-4">
-              <button type="submit" class="btn btn-cta btn-caba-verde btn-lg">Registrarse</button>
+              <button type="submit" class="btn btn-cta btn-caba-verde btn-lg" th:text="#{registro.boton}"></button>
 
             </div>
+
+            <p class="mt-3 text-center">
+              <span th:text="#{login.siCuenta}"></span>
+              <a th:href="@{/login}" th:text="#{login.boton}"></a>
+            </p>
+
 
 
             

@@ -19,8 +19,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
+            .headers(headers -> headers.frameOptions(frame -> frame.disable())) // 👈 permite iframes (requerido por H2)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/registro", "/css/**", "/js/**","/images/**","/uploads/**","/noticias/api","/noticias/mock").permitAll()
+                .requestMatchers("/", "/login", "/registro", "/css/**", "/js/**","/images/**","/uploads/**","/noticias/api","/noticias/mock","/h2-console/**").permitAll()
                 .requestMatchers("/admin/**","/torneos/**","/partidos/**").hasRole("ADMIN")
                 .requestMatchers("/arbitro/**").hasRole("ARBITRO")
                 .anyRequest().authenticated()
