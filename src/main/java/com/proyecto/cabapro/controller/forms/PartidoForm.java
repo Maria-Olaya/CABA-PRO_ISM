@@ -6,32 +6,40 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.proyecto.cabapro.enums.EstadoPartido;
 
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 
 public class PartidoForm {
 
     private Integer idPartido;
 
-    @NotNull(message = "La fecha es obligatoria")
+    @NotNull(message = "{partido.fecha.obligatoria}")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime fecha;
 
-    @NotEmpty(message = "El lugar es obligatorio")
+    @NotBlank(message = "{partido.lugar.obligatorio}")
+    @Size(min = 3, max = 100, message = "{partido.lugar.tamano}")
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ0-9\\s]+$", message = "{partido.lugar.pattern}")
     private String lugar;
 
-   
     private EstadoPartido estadoPartido;
 
-    @NotEmpty(message = "El equipo local es obligatorio")
+    @NotBlank(message = "{partido.equipoLocal.obligatorio}")
+    @Size(min = 3, max = 50, message = "{partido.equipoLocal.tamano}")
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ0-9\\s]+$", message = "{partido.equipoLocal.pattern}")
     private String equipoLocal;
 
-    @NotEmpty(message = "El equipo visitante es obligatorio")
+    @NotBlank(message = "{partido.equipoVisitante.obligatorio}")
+    @Size(min = 3, max = 50, message = "{partido.equipoVisitante.tamano}")
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ0-9\\s]+$", message = "{partido.equipoVisitante.pattern}")
     private String equipoVisitante;
 
-    @NotNull(message = "Debe seleccionar un torneo")
+    @NotNull(message = "{partido.torneo.obligatorio}")
     private Integer torneoId;
+
 
 
     // Getters y setters

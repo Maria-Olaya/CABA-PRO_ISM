@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/arbitro/asignaciones")
@@ -18,37 +19,38 @@ public class AsignacionController {
     }
 
     @GetMapping
-    public String vista(@AuthenticationPrincipal User principal,
-                        @RequestParam(value = "msg", required = false) String msg,
-                        @RequestParam(value = "err", required = false) String err,
-                        Model model) {
-
+    public String vista(@AuthenticationPrincipal User principal, Model model) {
         String correo = principal.getUsername();
-
         model.addAttribute("arbitro", asignacionService.getArbitroActual(correo));
         model.addAttribute("asignaciones", asignacionService.listarDelActual(correo));
-        model.addAttribute("msg", msg);
-        model.addAttribute("err", err);
         return "arbitro/asignacion"; // templates/arbitro/asignacion.html
     }
 
     @PostMapping("/{id}/aceptar")
-    public String aceptar(@AuthenticationPrincipal User principal, @PathVariable Long id) {
+    public String aceptar(@AuthenticationPrincipal User principal,
+                          @PathVariable Long id,
+                          RedirectAttributes ra) {
         try {
             asignacionService.aceptar(principal.getUsername(), id);
-            return "redirect:/arbitro/asignaciones?msg=Asignacion aceptada";
+            ra.addFlashAttribute("msgCode", "flash.asignacion.aceptada");
         } catch (IllegalArgumentException ex) {
-            return "redirect:/arbitro/asignaciones?err=" + ex.getMessage();
+            ra.addFlashAttribute("errCode", "flash.asignacion.error");
+            ra.addFlashAttribute("errArg0", ex.getMessage());
         }
+        return "redirect:/arbitro/asignaciones";
     }
 
     @PostMapping("/{id}/rechazar")
-    public String rechazar(@AuthenticationPrincipal User principal, @PathVariable Long id) {
+    public String rechazar(@AuthenticationPrincipal User principal,
+                           @PathVariable Long id,
+                           RedirectAttributes ra) {
         try {
             asignacionService.rechazar(principal.getUsername(), id);
-            return "redirect:/arbitro/asignaciones?msg=Asignacion rechazada";
+            ra.addFlashAttribute("msgCode", "flash.asignacion.rechazada");
         } catch (IllegalArgumentException ex) {
-            return "redirect:/arbitro/asignaciones?err=" + ex.getMessage();
+            ra.addFlashAttribute("errCode", "flash.asignacion.error");
+            ra.addFlashAttribute("errArg0", ex.getMessage());
         }
+        return "redirect:/arbitro/asignaciones";
     }
 }

@@ -1,5 +1,8 @@
 package com.proyecto.cabapro.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +20,9 @@ import jakarta.validation.Valid;
 
 @Controller
 public class AuthController {
+    @Autowired
+    private MessageSource messageSource;
+
 
     private final UsuarioRepository usuarioRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -41,13 +47,22 @@ public class AuthController {
 
     @PostMapping("/registro")
     public String registrarUsuario(@Valid @ModelAttribute("registerForm") RegisterForm form,
-                                BindingResult result) {
-        if (result.hasErrors()) {
-            return "registro";
+                                BindingResult result, Model model) {
+        
+        
+        // Validar coincidencia de contraseñas
+        if(!form.getContrasena().equals(form.getConfirmContrasena())) {
+            result.rejectValue("confirmContrasena", "error.registerForm",
+                messageSource.getMessage("registro.error.contrasena_no_coincide", null, LocaleContextHolder.getLocale()));
         }
+        
 
         if(customUserDetailsService.correoExiste(form.getCorreo())) {
-            result.rejectValue("correo", "error.registerForm", "El correo ya está en uso");
+            result.rejectValue("correo", "error.registerForm",
+                messageSource.getMessage("registro.error.correo_duplicado", null, LocaleContextHolder.getLocale()));
+        }
+
+        if (result.hasErrors()) {
             return "registro";
         }
 
@@ -63,7 +78,9 @@ public class AuthController {
 
         usuarioRepository.save(admin);
 
-        return "redirect:/login";
+        model.addAttribute("mensajeExito",
+            messageSource.getMessage("registro.exito", null, LocaleContextHolder.getLocale()));
+        return "login";
     }
 
 }

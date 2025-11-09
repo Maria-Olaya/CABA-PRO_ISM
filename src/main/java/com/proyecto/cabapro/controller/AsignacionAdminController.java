@@ -33,24 +33,27 @@ public class AsignacionAdminController {
 
         model.addAttribute("noDispIds", asignacionService.arbitrosNoDisponiblesIds(partidoId));
         model.addAttribute("yaAsigIds", asignacionService.arbitrosYaAsignadosIds(partidoId));
-
         model.addAttribute("aceptadas", asignacionService.listarAceptadasPorPartido(partidoId));
         model.addAttribute("faltanEsp", asignacionService.especialidadesFaltantes(partidoId));
         model.addAttribute("espOcupadas", asignacionService.especialidadesOcupadas(partidoId));
 
-        return "admin/asignacion/crearlo"; //  templates/admin/asignacion/crearlo.html
+        return "admin/asignacion/crearlo"; // templates/admin/asignacion/crearlo.html
     }
 
-    // Crear UNA asignación para el partido indicado. 
+    // Crear UNA asignación para el partido indicado.
     @PostMapping("/uno")
     public String crearUna(@RequestParam("partidoId") int partidoId,
                            @RequestParam("arbitroId") Integer arbitroId,
                            RedirectAttributes ra) {
         try {
             Asignacion a = asignacionService.crearParaArbitroYPartido(arbitroId, partidoId);
-            ra.addFlashAttribute("msg", "Asignación creada (id=" + a.getId() + ")");
+            // i18n por código + argumentos (se resuelve en la vista)
+            ra.addFlashAttribute("msgCode", "flash.asignacion.creada");
+            ra.addFlashAttribute("msgArg0", a.getId());
         } catch (IllegalArgumentException ex) {
-            ra.addFlashAttribute("err", ex.getMessage());
+            ra.addFlashAttribute("errCode", "flash.asignacion.error");
+            ra.addFlashAttribute("errArg0", ex.getMessage());
+
         }
         return "redirect:/asignacion/crear?partidoId=" + partidoId;
     }
