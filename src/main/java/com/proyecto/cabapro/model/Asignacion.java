@@ -17,25 +17,25 @@ public class Asignacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-  
+ 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "arbitro_id", nullable = false)
     @JsonBackReference 
     private Arbitro arbitro;
 
-  
+   
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "partido_id", nullable = false)
-    @JsonBackReference  
+    @JsonBackReference 
     private Partido partido;
 
-    // Torneo (se toma del partido)
+    
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "torneo_id", nullable = false)
     @JsonIgnoreProperties("partidos") 
     private Torneo torneo;
 
-    
+   
     private LocalDate fechaAsignacion;
 
     @Enumerated(EnumType.STRING)

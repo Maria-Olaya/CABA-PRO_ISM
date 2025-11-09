@@ -44,7 +44,7 @@ public class Torneo {
     @JsonManagedReference 
     private List<Partido> partidos;
 
-        @Transient 
+        @Transient
         private String categoriaTraducida;
 
 
@@ -55,7 +55,7 @@ public class Torneo {
         public void setTipoTraducido(String tipoTraducido) { this.tipoTraducido = tipoTraducido; }
 
 
-       
+        
         public String getCategoriaTraducida() {
             return categoriaTraducida;
         }
@@ -65,7 +65,7 @@ public class Torneo {
         }
 
 
-    // Getters y Setters
+    
     public int getIdTorneo() {
         return idTorneo;
     }

@@ -48,7 +48,7 @@ public class Liquidacion {
     @Column(name = "pdf", columnDefinition = "LONGBLOB")
     private byte[] pdf;
 
-    // getters/setters
+
     public Long getId() { return id; }
 
     public Arbitro getArbitro() { return arbitro; }

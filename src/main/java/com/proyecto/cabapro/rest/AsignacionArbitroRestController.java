@@ -1,4 +1,3 @@
-// NUEVO - si 
 package com.proyecto.cabapro.rest;
 
 import java.util.HashMap;
@@ -29,10 +28,6 @@ public class AsignacionArbitroRestController {
         this.asignacionService = asignacionService;
     }
 
-    /**
-     * Obtiene las asignaciones del árbitro actual autenticado.
-     */
-    // ================= LISTAR ASIGNACIONES DEL ÁRBITRO =================
     @Operation(
         summary = "Listar asignaciones del árbitro autenticado",
         description = "Devuelve el árbitro actual y sus asignaciones con el estado.",
@@ -63,10 +58,6 @@ public class AsignacionArbitroRestController {
         return response;
     }
 
-    /**
-     * Acepta una asignación del árbitro autenticado.
-     */
-    // ================= ACEPTAR ASIGNACIÓN =================
     @Operation(
         summary = "Aceptar asignación",
         description = "El árbitro acepta una asignación específica.",
@@ -106,10 +97,6 @@ public class AsignacionArbitroRestController {
         return response;
     }
 
-    /**
-     * Rechaza una asignación del árbitro autenticado.
-     */
-     // ================= RECHAZAR ASIGNACIÓN =================
     @Operation(
         summary = "Rechazar asignación",
         description = "El árbitro rechaza una asignación específica.",

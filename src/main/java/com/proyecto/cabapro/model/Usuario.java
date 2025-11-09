@@ -24,10 +24,10 @@ public class Usuario {
     private String contrasena;
     private String rol;
 
-
+    
     public Usuario() {}
 
-  
+    
     public Usuario(String nombre, String apellido, String correo, String contrasena, String rol) {
         this.nombre = nombre;
         this.apellido = apellido;

@@ -14,7 +14,6 @@ public class Pago {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Liquidación pagada
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "liquidacion_id", nullable = false)
     private Liquidacion liquidacion;
