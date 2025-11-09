@@ -1,3 +1,5 @@
+// MODIFICADO 
+
 package com.proyecto.cabapro.controller;
 
 import com.proyecto.cabapro.controller.forms.ArbitroForm;
@@ -8,12 +10,14 @@ import com.proyecto.cabapro.model.Asignacion;
 import com.proyecto.cabapro.service.ArbitroService;
 import com.proyecto.cabapro.service.AsignacionService;
 import jakarta.validation.Valid;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Locale;
 
 @Controller
 @RequestMapping("/admin/arbitros")
@@ -21,16 +25,20 @@ public class ArbitroAdminController {
 
     private final ArbitroService service;
     private final AsignacionService asignacionService;
+    private final MessageSource messageSource;
 
-    public ArbitroAdminController(ArbitroService service, AsignacionService asignacionService) {
+    public ArbitroAdminController(ArbitroService service,
+                                  AsignacionService asignacionService,
+                                  MessageSource messageSource) {
         this.service = service;
         this.asignacionService = asignacionService;
+        this.messageSource = messageSource;
     }
 
     // ================= LISTADO (panel central) =================
     @GetMapping
     public String list(@RequestParam(value = "arbitroId", required = false) Integer arbitroId,
-                       Model model) {
+                       Model model, Locale locale) {
         model.addAttribute("arbitros", service.listar());
 
         if (arbitroId != null) {
@@ -40,7 +48,10 @@ public class ArbitroAdminController {
                 model.addAttribute("arbitroSel", sel);
                 model.addAttribute("asignacionesSel", asignaciones);
             } else {
-                model.addAttribute("err", "Árbitro no encontrado (id=" + arbitroId + ")");
+                String msg = messageSource.getMessage(
+                        "admin.arbitros.noEncontrado",
+                        new Object[]{arbitroId}, locale);
+                model.addAttribute("err", msg);
             }
         }
         return "admin/arbitros/list";
@@ -59,7 +70,8 @@ public class ArbitroAdminController {
     @PostMapping
     public String create(@Valid @ModelAttribute("form") ArbitroForm form,
                          BindingResult br,
-                         Model model) {
+                         Model model,
+                         Locale locale) {
 
         if (br.hasErrors()) {
             commonSelects(model);
@@ -73,11 +85,14 @@ public class ArbitroAdminController {
             service.crear(entidad);
             return "redirect:/admin/arbitros";
         } catch (ArbitroService.PasswordRequiredOnCreateException e) {
-            br.rejectValue("contrasena", "contrasena.requerida", e.getMessage());
+            br.rejectValue("contrasena", "admin.arbitros.error.contrasenaRequerida",
+                    messageSource.getMessage("admin.arbitros.error.contrasenaRequerida", null, locale));
         } catch (ArbitroService.DuplicateEmailException e) {
-            br.rejectValue("correo", "correo.duplicado", e.getMessage());
+            br.rejectValue("correo", "admin.arbitros.error.correoDuplicado",
+                    messageSource.getMessage("admin.arbitros.error.correoDuplicado", null, locale));
         } catch (IllegalArgumentException e) {
-            br.reject("crear.error", e.getMessage());
+            br.reject("admin.arbitros.error.crear",
+                    messageSource.getMessage("admin.arbitros.error.crear", null, locale));
         }
 
         commonSelects(model);
@@ -93,7 +108,7 @@ public class ArbitroAdminController {
         if (a == null) return "redirect:/admin/arbitros";
 
         ArbitroForm form = fromEntity(a);
-        form.setContrasena(""); // no exponer
+        form.setContrasena(""); // no exponer contraseña
 
         model.addAttribute("form", form);
         commonSelects(model);
@@ -106,7 +121,8 @@ public class ArbitroAdminController {
     public String update(@PathVariable Integer id,
                          @Valid @ModelAttribute("form") ArbitroForm form,
                          BindingResult br,
-                         Model model) {
+                         Model model,
+                         Locale locale) {
 
         if (br.hasErrors()) {
             commonSelects(model);
@@ -120,9 +136,11 @@ public class ArbitroAdminController {
             service.actualizar(id, a);
             return "redirect:/admin/arbitros";
         } catch (ArbitroService.DuplicateEmailException e) {
-            br.rejectValue("correo", "correo.duplicado", e.getMessage());
+            br.rejectValue("correo", "admin.arbitros.error.correoDuplicado",
+                    messageSource.getMessage("admin.arbitros.error.correoDuplicado", null, locale));
         } catch (IllegalArgumentException e) {
-            br.reject("editar.error", e.getMessage());
+            br.reject("admin.arbitros.error.editar",
+                    messageSource.getMessage("admin.arbitros.error.editar", null, locale));
         }
 
         commonSelects(model);
@@ -149,8 +167,7 @@ public class ArbitroAdminController {
         a.setNombre(f.getNombre());
         a.setApellido(f.getApellido());
         a.setCorreo(f.getCorreo());
-        a.setContrasena(f.getContrasena()); 
-        a.setUrlFoto(f.getUrlFoto());
+        a.setContrasena(f.getContrasena());
         a.setEspecialidad(f.getEspecialidad());
         a.setEscalafon(f.getEscalafon());
         return a;
@@ -162,7 +179,6 @@ public class ArbitroAdminController {
         f.setNombre(a.getNombre());
         f.setApellido(a.getApellido());
         f.setCorreo(a.getCorreo());
-        f.setUrlFoto(a.getUrlFoto());
         f.setEspecialidad(a.getEspecialidad());
         f.setEscalafon(a.getEscalafon());
         return f;

@@ -1,4 +1,3 @@
-// src/main/java/com/proyecto/cabapro/controller/ArbitroController.java
 package com.proyecto.cabapro.controller;
 
 import com.proyecto.cabapro.model.Arbitro;
@@ -8,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -24,7 +24,10 @@ public class ArbitroController {
 
     // GET: muestra el formulario con los datos actuales y las fechas bloqueadas
     @GetMapping
-    public String verPerfil(@AuthenticationPrincipal(expression = "username") String correo, Model model) {
+    public String verPerfil(
+            @AuthenticationPrincipal(expression = "username") String correo,
+            Model model
+    ) {
         Arbitro arbitro = arbitroService.getActual(correo);
 
         // Fechas bloqueadas (asignaciones ACEPTADAS) para pintar en la vista
@@ -32,15 +35,19 @@ public class ArbitroController {
 
         model.addAttribute("arbitro", arbitro);
         model.addAttribute("bloqueadas", bloqueadas);
+
         return "arbitro/perfil"; // templates/arbitro/perfil.html
     }
 
-    // POST: procesa el form y delega la actualización al Service.
+    // POST: procesa el form y delega la actualización al Service
     @PostMapping
-    public String actualizarPerfil(@AuthenticationPrincipal(expression = "username") String correo,
-                                   @ModelAttribute("arbitro") Arbitro form,
-                                   BindingResult binding,
-                                   Model model) {
+    public String actualizarPerfil(
+            @AuthenticationPrincipal(expression = "username") String correo,
+            @ModelAttribute("arbitro") Arbitro form,
+            BindingResult binding,
+            Model model,
+            RedirectAttributes ra
+    ) {
         if (binding.hasErrors()) {
             Arbitro actual = arbitroService.getActual(correo);
             Set<LocalDate> bloqueadas = arbitroService.fechasBloqueadas(actual);
@@ -48,11 +55,19 @@ public class ArbitroController {
             return "arbitro/perfil";
         }
 
-        arbitroService.actualizarPerfil(
-            correo,
-            form.getUrlFoto(),
-            form.getFechasDisponibles() 
-        );
-        return "redirect:/arbitro/dashboard?ok";
+        try {
+            arbitroService.actualizarPerfil(
+                    correo,
+                    form.getUrlFoto(),
+                    form.getFechasDisponibles()
+            );
+            ra.addFlashAttribute("msgCode", "perfil.actualizado");
+            return "redirect:/arbitro/dashboard";
+
+        } catch (IllegalArgumentException ex) {
+            ra.addFlashAttribute("errCode", "perfil.error");
+            ra.addFlashAttribute("errArg0", ex.getMessage());
+            return "redirect:/arbitro/perfil";
+        }
     }
 }

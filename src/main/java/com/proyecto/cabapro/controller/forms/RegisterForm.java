@@ -1,22 +1,33 @@
 package com.proyecto.cabapro.controller.forms;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
 
 public class RegisterForm {
 
-    @NotEmpty(message = "El nombre es obligatorio")
+    @NotBlank(message = "{registro.nombre.obligatorio}")
+    @Size(min = 2, max = 50, message = "{registro.nombre.tamano}")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$", message = "{registro.nombre.pattern}")
     private String nombre;
 
-    @NotEmpty(message = "El apellido es obligatorio")
+    @NotBlank(message = "{registro.apellido.obligatorio}")
+    @Size(min = 2, max = 50, message = "{registro.apellido.tamano}")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$", message = "{registro.apellido.pattern}")
     private String apellido;
 
-    @NotEmpty(message = "El correo es obligatorio")
-    @Email(message = "Debe ser un correo válido")
+    @NotBlank(message = "{registro.correo.obligatorio}")
+    @Email(message = "{registro.correo.invalido}")
     private String correo;
 
-    @NotEmpty(message = "La contraseña es obligatoria")
+    @NotBlank(message = "{registro.contrasena.obligatoria}")
+    @Size(min = 6, max = 100, message = "{registro.contrasena.tamano}")
     private String contrasena;
+
+    @NotBlank(message = "{registro.confirmContrasena.obligatoria}")
+    private String confirmContrasena;
 
 
     // Getters y setters
@@ -31,5 +42,9 @@ public class RegisterForm {
 
     public String getContrasena() { return contrasena; }
     public void setContrasena(String contrasena) { this.contrasena = contrasena; }
+    
+    public String getConfirmContrasena() { return confirmContrasena; }
+    public void setConfirmContrasena(String confirmContrasena) { this.confirmContrasena = confirmContrasena; }
+
 
 }
