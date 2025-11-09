@@ -44,6 +44,7 @@ public class PartidoService {
 
 
 
+  
     public Partido savePartido(Partido partido) {
         var torneo = partido.getTorneo();
         if (torneo == null) {
@@ -98,7 +99,7 @@ public class PartidoService {
         List<Partido> partidos = partidoRepository.findByTorneo_IdTorneo(torneo.getIdTorneo());
 
         partidos.forEach(p -> {
-            actualizarEstado(p);        
+            actualizarEstado(p);       
             traducirEstado(p);         
         });
 
@@ -150,21 +151,12 @@ public class PartidoService {
     }
 
     
-    // ---------------- Lógica de estado ----------------
-    /**
-     * Actualiza el estado del partido según la fecha actual.
-     * - Si fecha == null -> no hace nada.
-     * - Si ya CANCELADO -> no cambia.
-     * - Usa duración por defecto de 120 minutos (ajusta para pruebas).
-     */
-  
-
     public void actualizarEstado(Partido partido) {
         if (partido.getFecha() == null) return;
         if (partido.getEstadoPartido() == EstadoPartido.CANCELADO) return;
 
         LocalDateTime ahora = LocalDateTime.now();
-        long duracionMinutos = 10L; 
+        long duracionMinutos = 20L; //  parametrizar
 
         LocalDateTime inicio = partido.getFecha();
         LocalDateTime fin = inicio.plusMinutes(duracionMinutos);

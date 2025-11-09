@@ -37,7 +37,7 @@ public class TarifaService {
         this.messageSource = messageSource; 
     }
 
-    // ===== BASE por categoría (VALOR DEL PARTIDO) =====
+
     public BigDecimal baseCategoria(CategoriaTorneo cat) {
         if (cat == null) return BigDecimal.ZERO;
         return switch (cat) {
@@ -47,9 +47,8 @@ public class TarifaService {
         };
     }
 
-    // ===== FACTOR por escalafón  =====
     public BigDecimal factorEscalafon(Escalafon esc) {
-        if (esc == null) return new BigDecimal("1.10"); 
+        if (esc == null) return new BigDecimal("1.10"); // fallback suave
         return switch (esc) {
             case INTERNACIONAL_FIBA   -> new BigDecimal("1.30");
             case PROFESIONAL_NACIONAL -> new BigDecimal("1.25");
@@ -64,6 +63,7 @@ public class TarifaService {
                 .multiply(factorEscalafon(escalafon))
                 .setScale(2, RoundingMode.HALF_UP);
     }
+
 
     public BigDecimal adicionalEscalafon(CategoriaTorneo cat, Escalafon esc) {
         BigDecimal base = baseCategoria(cat);

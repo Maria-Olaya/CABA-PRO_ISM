@@ -12,8 +12,6 @@ import com.proyecto.cabapro.model.Torneo;
 import com.proyecto.cabapro.repository.TorneoRepository;
 
 
-
-
 @Service
 public class TorneoService {
 
@@ -31,7 +29,6 @@ public class TorneoService {
         return torneoRepository.save(torneo);
     }
 
-   
     public List<Torneo> listarTorneos() {
         List<Torneo> torneos = torneoRepository.findAll();
         torneos.forEach(t -> {
@@ -41,7 +38,6 @@ public class TorneoService {
         return torneos;
     }
 
-   
     public Torneo obtenerPorId(int id) {
         return torneoRepository.findById(id)
             .map(t -> {
@@ -81,7 +77,7 @@ public class TorneoService {
                 null,
                 LocaleContextHolder.getLocale()
             );
-            torneo.setTipoTraducido(mensaje);
+            torneo.setTipoTraducido(mensaje); 
         }
     }
 

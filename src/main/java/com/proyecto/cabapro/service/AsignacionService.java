@@ -45,9 +45,6 @@ public class AsignacionService {
         this.mailService = mailService;
     }
 
-    // ============== CREATE / UPDATE (dominio) ==============
-
-  
     public Asignacion crearParaArbitroYPartido(Integer arbitroId, int partidoId) {
         Arbitro a = buscarArbitroOrThrow(arbitroId);
         Partido p = buscarPartido(partidoId);
@@ -57,13 +54,14 @@ public class AsignacionService {
 
         Asignacion asg = asignacionRepo.save(construirPendiente(a, p));
 
-      
+   
         traducirEstado(asg);
 
         mailService.notificarNuevaAsignacion(asg);  
         return asg;
     }
 
+   
     public void aceptar(String correo, Long asignacionId) {
         Arbitro a = getArbitroActual(correo);
         Asignacion asig = asignacionRepo.findByIdAndArbitro(asignacionId, a)
@@ -75,6 +73,7 @@ public class AsignacionService {
         asig.setEstado(EstadoAsignacion.ACEPTADA);
         asignacionRepo.save(asig);
 
+    
         traducirEstado(asig);
 
         Partido p = asig.getPartido();
@@ -84,6 +83,7 @@ public class AsignacionService {
         }
     }
 
+    
     public void rechazar(String correo, Long asignacionId) {
         Arbitro a = getArbitroActual(correo);
         Asignacion asig = asignacionRepo.findByIdAndArbitro(asignacionId, a)
@@ -95,7 +95,7 @@ public class AsignacionService {
         asig.setEstado(EstadoAsignacion.RECHAZADA);
         asignacionRepo.save(asig);
 
-        
+
         traducirEstado(asig);
 
         Partido p = asig.getPartido();
@@ -103,7 +103,6 @@ public class AsignacionService {
         partidoRepo.save(p);
     }
 
-    // ======================= READ ========================
     @Transactional(readOnly = true)
     public List<Asignacion> listarDelActual(String correo) {
         Arbitro a = getArbitroActual(correo);
@@ -129,7 +128,6 @@ public class AsignacionService {
         return lista;
     }
 
-    // ======= Soporte a vistas / consultas de dominio =======
     @Transactional(readOnly = true)
     public List<Arbitro> listarArbitros() {
         return arbitroService.listar();
@@ -206,7 +204,6 @@ public class AsignacionService {
                 .collect(Collectors.toSet());
     }
 
-    // =================== Helpers privados ===================
     private Arbitro buscarArbitroOrThrow(Integer id) {
         Arbitro a = arbitroService.buscar(id);
         if (a == null) throw new IllegalArgumentException("Árbitro no encontrado.");
@@ -251,12 +248,12 @@ public class AsignacionService {
                 && a.getEscalafon() != null) {
             monto = tarifaService.totalPor(p.getTorneo().getCategoria(), a.getEscalafon());
         }
-        asg.setMonto(monto); 
-      
+        asg.setMonto(monto);
+
+       
         traducirEstado(asg);
         return asg;
     }
-
 
     private void traducirEstado(Asignacion a) {
         if (a != null && a.getEstado() != null) {
@@ -269,7 +266,7 @@ public class AsignacionService {
         }
     }
 
-
+  
     private void traducirEstados(List<Asignacion> lista) {
         if (lista != null) {
             lista.forEach(this::traducirEstado);

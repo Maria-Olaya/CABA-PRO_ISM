@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class ArbitroService {
 
-    // ===== Excepciones =====
+    
     public static class DuplicateEmailException extends RuntimeException {
         public DuplicateEmailException(String message) {
             super(message);
@@ -52,21 +52,25 @@ public class ArbitroService {
     }
 
     public Arbitro crear(Arbitro a) {
-      
+     
         if (a.getCorreo() == null || a.getCorreo().isBlank()) {
             throw new IllegalArgumentException("El correo es obligatorio");
         }
+
         if (arbitroRepo.existsByCorreoIgnoreCase(a.getCorreo())) {
             throw new DuplicateEmailException("El correo ya está en uso por otro usuario");
         }
+
         if (a.getContrasena() == null || a.getContrasena().isBlank()) {
             throw new PasswordRequiredOnCreateException("La contraseña es obligatoria al crear el árbitro");
         }
 
         a.setContrasena(encoder.encode(a.getContrasena()));
+
         if (a.getRol() == null || a.getRol().isBlank()) {
             a.setRol("ROLE_ARBITRO");
         }
+
         return arbitroRepo.save(a);
     }
 
@@ -77,6 +81,7 @@ public class ArbitroService {
         if (datos.getCorreo() == null || datos.getCorreo().isBlank()) {
             throw new IllegalArgumentException("El correo es obligatorio");
         }
+
         if (!datos.getCorreo().equalsIgnoreCase(actual.getCorreo())) {
             if (arbitroRepo.existsByCorreoIgnoreCaseAndIdNot(datos.getCorreo(), id)) {
                 throw new DuplicateEmailException("El correo ya está en uso por otro usuario");
@@ -87,7 +92,6 @@ public class ArbitroService {
         actual.setApellido(datos.getApellido());
         actual.setCorreo(datos.getCorreo());
 
-        
         if (datos.getRol() != null && !datos.getRol().isBlank()) {
             actual.setRol(datos.getRol());
         }
@@ -95,7 +99,7 @@ public class ArbitroService {
             actual.setRol("ROLE_ARBITRO");
         }
 
-        
+     
         if (datos.getContrasena() != null && !datos.getContrasena().isBlank()) {
             actual.setContrasena(encoder.encode(datos.getContrasena()));
         }
@@ -123,7 +127,7 @@ public class ArbitroService {
 
     public Arbitro getActual(String correo) {
         return arbitroRepo.findByCorreo(correo)
-                .orElseThrow(() -> new IllegalArgumentException("Árbitro no encontrado para correo: " + correo));
+            .orElseThrow(() -> new IllegalArgumentException("Árbitro no encontrado para correo: " + correo));
     }
 
     public void actualizarPerfil(String correo, String urlFoto, Set<LocalDate> nuevasFechas) {
@@ -140,13 +144,13 @@ public class ArbitroService {
         arbitroRepo.save(a);
     }
 
-    // =============== FECHAS BLOQUEADAS ===============
+
 
     @Transactional(readOnly = true)
     public Set<LocalDate> fechasBloqueadas(Arbitro a) {
         return asignacionRepo.findByArbitroAndEstado(a, EstadoAsignacion.ACEPTADA)
-                .stream()
-                .map(Asignacion::getFechaAsignacion)
-                .collect(Collectors.toSet());
+            .stream()
+            .map(Asignacion::getFechaAsignacion)
+            .collect(Collectors.toSet());
     }
 }
