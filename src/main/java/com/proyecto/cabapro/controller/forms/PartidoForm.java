@@ -37,8 +37,8 @@ public class PartidoForm {
     @Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ0-9\\s]+$", message = "{partido.equipoVisitante.pattern}")
     private String equipoVisitante;
 
-    @NotNull(message = "{partido.torneo.obligatorio}")
-    private Integer torneoId;
+   // @NotNull(message = "{partido.torneo.obligatorio}")
+    //private Integer torneoId;
 
 
 
@@ -61,8 +61,8 @@ public class PartidoForm {
     public String getEquipoVisitante() { return equipoVisitante; }
     public void setEquipoVisitante(String equipoVisitante) { this.equipoVisitante = equipoVisitante; }
 
-    public Integer getTorneoId() { return torneoId; }
-    public void setTorneoId(Integer torneoId) { this.torneoId = torneoId; }
+    /*public Integer getTorneoId() { return torneoId; }
+    public void setTorneoId(Integer torneoId) { this.torneoId = torneoId; }*/
 
    
 }
